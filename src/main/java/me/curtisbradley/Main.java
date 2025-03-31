@@ -4,7 +4,8 @@ package me.curtisbradley;
 public class Main {
 
     public static void main(String[] args) {
-        new GameInterface();
+        Game g = new Game(5,5);
+        new GameInterface(g);
 
     }
 }
