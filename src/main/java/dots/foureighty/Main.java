@@ -1,4 +1,4 @@
-package me.curtisbradley;
+package dots.foureighty;
 
 
 public class Main {

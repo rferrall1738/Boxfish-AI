@@ -1,4 +1,4 @@
-package me.curtisbradley;
+package dots.foureighty;
 
 import java.util.HashMap;
 
@@ -24,6 +24,10 @@ public class Game {
         return playerUpNow;
     }
 
+    public void setPlayerPlacing(Player player) {
+        playerUpNow = player;
+    }
+
     public Board getBoard() {
         return board;
     }
@@ -31,7 +35,6 @@ public class Game {
     public int getPlayerScore(Player player) {
         return scores.getOrDefault(player,0);
     }
-
 
 
 }
