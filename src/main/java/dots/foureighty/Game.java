@@ -1,11 +1,9 @@
 package dots.foureighty;
 
-import dots.foureighty.lines.PlayedLine;
 import dots.foureighty.moves.Move;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
 public class Game {
 
