@@ -28,9 +28,8 @@ public class Board {
     public ArrayList<PlayedLine> getPlayedLines() {
         return playedLines;
     }
-    public void playLine(PlayedLine playedLine) {
+    public void addLine(PlayedLine playedLine) {
         currentMove.add(playedLine);
-
         playedLines.add(playedLine);
     }
 

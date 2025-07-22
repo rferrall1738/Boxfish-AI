@@ -89,10 +89,9 @@ public class GameInterface extends JFrame {
            if(nearest == null) {
                return;
            }
-           game.getBoard().playLine((new PlayedLine(nearest.getX(),nearest.getY(),nearest.getDirection(),game.getPlayerPlacing())));
+           PlayedLine lineToPlay = new PlayedLine(nearest.getX(),nearest.getY(),nearest.getDirection(),game.getPlayerPlacing());
+           //TODO: Fix this
            paintComponent(getGraphics());
-           game.setPlayerPlacing(game.getPlayerPlacing() == Player.PLAYER1 ? Player.PLAYER2 : Player.PLAYER1);
-
         }
 
         private int getYPadding() {
