@@ -1,15 +1,13 @@
 package dots.foureighty;
 
 import dots.foureighty.moves.Move;
-
 import java.util.Arrays;
 import java.util.HashMap;
 
 public class Game {
-
     private final Board board;
     private Player playerUpNow = Player.PLAYER1;
-    private final HashMap<Player,Integer> scores = new HashMap<>();
+    private final HashMap<Player, Integer> scores = new HashMap<>();
     private GameListener listener;
 
     public Game(int xSize, int ySize) {
@@ -39,14 +37,12 @@ public class Game {
     public void addGameListener(GameListener listener) {
         this.listener = listener;
     }
-    
+
     public int getPlayerScore(Player player) {
-        return scores.getOrDefault(player,0);
+        return scores.getOrDefault(player, 0);
     }
 
     public void playMove(Move move) {
-
-        Arrays.stream(move.getLines()).forEach(getBoard()::addLine);
+        Arrays.stream(move.getLines()).forEach(board::addLine);
     }
-
 }

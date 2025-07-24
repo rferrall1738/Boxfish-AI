@@ -1,3 +1,4 @@
+// File: GameInterface.java
 package dots.foureighty;
 
 import dots.foureighty.lines.GUILine;
@@ -11,14 +12,18 @@ import java.awt.event.MouseEvent;
 import java.util.*;
 
 public class GameInterface extends JFrame {
-
     public GameInterface(Game g) {
-        super("Game Interface");
+        super("DOTS AND BOXES");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(250, 250);
+
+        GridPanel panel = new GridPanel(g);
+        panel.setPreferredSize(new Dimension(500, 500));
+        panel.setBackground(Color.WHITE);
+        add(panel);
+
+        pack();
+        panel.repaint();
         setVisible(true);
-        setMinimumSize(new Dimension(250, 250));
-        add(new GridPanel(g));
     }
 
     static class GridPanel extends JPanel {
@@ -30,68 +35,70 @@ public class GameInterface extends JFrame {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     Point clickPoint = e.getPoint();
+                    System.out.println("Clicked: " + clickPoint);
                     placeWall(clickPoint);
                 }
             });
         }
 
-
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
 
+            // Draw played lines
             game.getBoard().getPlayedLines().forEach(playedLine -> {
                 g.setColor(playedLine.getPlayer() == Player.PLAYER1 ? Color.RED : Color.BLUE);
                 g.fillRoundRect(getXPadding() + playedLine.getX() * getCellDim(), getYPadding() + playedLine.getY() * getCellDim(),
                         playedLine.getDirection() == Line.Direction.DOWN ? 10 : getCellDim() + 10,
-                        playedLine.getDirection() == Line.Direction.DOWN ? getCellDim() + 10: 10,10,10);
-                    }
-            );
+                        playedLine.getDirection() == Line.Direction.DOWN ? getCellDim() + 10 : 10, 20, 20);
+            });
+
+            // Draw dots
             g.setColor(Color.BLACK);
             for (int i = 0; i < game.getXSize(); i++) {
                 for (int j = 0; j < game.getYSize(); j++) {
                     g.fillOval(getXPadding() + i * getCellDim(), getYPadding() + j * getCellDim(), 10, 10);
                 }
             }
-
-
         }
 
         private ArrayList<GUILine> getWalls() {
             ArrayList<GUILine> walls = new ArrayList<>();
-
             game.getBoard().getValidLinePlacements().forEach(line -> {
-                if(line.getDirection() == Line.Direction.RIGHT) {
-                    walls.add(new GUILine(line.getX(), line.getY(), line.getDirection(),
-                            new Point((int) (getXPadding() + line.getX() * getCellDim() + (getCellDim() * 0.5)) + 5,
-                                    getYPadding() + line.getY() * getCellDim() + 5)));
-                } else if(line.getDirection() == Line.Direction.DOWN) {
-                    walls.add(new GUILine(line.getX(), line.getY(), line.getDirection(),
-                            new Point(getXPadding() + line.getX() * getCellDim() + 5,
-                                    (int) (getYPadding() + line.getY() * getCellDim() + (getCellDim() * 0.5)) + 5)));
-                }
-
+                Point point = line.getDirection() == Line.Direction.RIGHT
+                        ? new Point((int) (getXPadding() + line.getX() * getCellDim() + (getCellDim() * 0.5)) + 5,
+                        getYPadding() + line.getY() * getCellDim() + 5)
+                        : new Point(getXPadding() + line.getX() * getCellDim() + 5,
+                        (int) (getYPadding() + line.getY() * getCellDim() + (getCellDim() * 0.5)) + 5);
+                walls.add(new GUILine(line.getX(), line.getY(), line.getDirection(), point));
             });
             return walls;
         }
 
         private GUILine findWall(Point clickedPoint, ArrayList<GUILine> validWalls) {
-            int tolerance = (int) (getCellDim() * 0.25);
-
+            int tolerance = (int) (getCellDim() * 0.9); // easier click
             return validWalls.stream()
-                    .map(GUILine -> new AbstractMap.SimpleEntry<>(GUILine, clickedPoint.distance(GUILine.getGUILocation())))
-                    .min(Map.Entry.comparingByValue()).map(pointPair -> pointPair.getValue() > tolerance ? null : pointPair.getKey())
+                    .map(w -> new AbstractMap.SimpleEntry<>(w, clickedPoint.distance(w.getGUILocation())))
+                    .min(Map.Entry.comparingByValue())
+                    .map(e -> e.getValue() > tolerance ? null : e.getKey())
                     .orElse(null);
         }
 
         private void placeWall(Point clickPoint) {
-           GUILine nearest = findWall(clickPoint, getWalls());
-           if(nearest == null) {
-               return;
-           }
-           PlayedLine lineToPlay = new PlayedLine(nearest.getX(),nearest.getY(),nearest.getDirection(),game.getPlayerPlacing());
-           //TODO: Fix this
-           paintComponent(getGraphics());
+            GUILine nearest = findWall(clickPoint, getWalls());
+            if (nearest == null) {
+                return;
+            }
+
+            PlayedLine lineToPlay = new PlayedLine(nearest.getX(), nearest.getY(), nearest.getDirection(), game.getPlayerPlacing());
+
+            if (game.getBoard().getPlayedLines().contains(lineToPlay)) {
+                return;
+            }
+
+            game.getBoard().addLine(lineToPlay);
+            game.setPlayerPlacing(game.getPlayerPlacing() == Player.PLAYER1 ? Player.PLAYER2 : Player.PLAYER1);
+            repaint();
         }
 
         private int getYPadding() {
@@ -109,7 +116,5 @@ public class GameInterface extends JFrame {
         private int getCellDim() {
             return getSpaceSize() / (Math.max(game.getXSize(), game.getYSize()) - 1);
         }
-
     }
-
 }
