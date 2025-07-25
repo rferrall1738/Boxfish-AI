@@ -1,11 +1,15 @@
 package dots.foureighty.lines;
 
+import java.util.Objects;
+
 public class Line {
     private final int x; // x of top left most dot
     private final int y; // y of top left most dot
-    private final PlayedLine.Direction direction;
 
-    public Line(int x, int y, PlayedLine.Direction direction) {
+    private final LineDirection direction;
+
+
+    public Line(int x, int y, LineDirection direction) {
         this.x = x;
         this.y = y;
         this.direction = direction;
@@ -19,12 +23,10 @@ public class Line {
         return y;
     }
 
-    public Direction getDirection() {
+    public LineDirection getDirection() {
         return direction;
     }
-    public enum Direction {
-        DOWN, RIGHT
-    }
+
 
     @Override
     public String toString() {
@@ -36,10 +38,14 @@ public class Line {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(getX(), getY(), getDirection());
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Line line = (Line) o;
-        return getX() == line.getX() && getY() == line.getY() && getDirection() == line.getDirection();
+        return this.hashCode() == o.hashCode();
     }
 }

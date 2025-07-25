@@ -3,7 +3,6 @@ package dots.foureighty;
 
 import dots.foureighty.lines.GUILine;
 import dots.foureighty.lines.Line;
-import dots.foureighty.lines.PlayedLine;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,6 +11,7 @@ import java.awt.event.MouseEvent;
 import java.util.*;
 
 public class GameInterface extends JFrame {
+        /*
     public GameInterface(Game g) {
         super("DOTS AND BOXES");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -117,4 +117,6 @@ public class GameInterface extends JFrame {
             return getSpaceSize() / (Math.max(game.getXSize(), game.getYSize()) - 1);
         }
     }
+
+     */
 }
