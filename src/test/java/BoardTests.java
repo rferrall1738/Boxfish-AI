@@ -22,7 +22,7 @@ public class BoardTests {
 
     public void badBoardSize(){
         try {
-            Board board = new Board(-1,-1);
+             new Board(-1,-1);
             throw new AssertionError("Invalid board did not error");
         } catch(IllegalArgumentException ignore) {}
         catch(Exception other) {
@@ -31,7 +31,7 @@ public class BoardTests {
     }
     public void boardInit() {
         try {
-            Board board = new Board(1,1);
+            new Board(1,1);
         } catch(Exception error) {
             throw new AssertionError("Unexpected exception", error);
         }

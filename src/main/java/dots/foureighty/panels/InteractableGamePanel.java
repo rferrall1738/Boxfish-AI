@@ -169,7 +169,7 @@ class InteractableGamePanel extends GamePanel {
     /***
      * Utility class for mapping the location of a line to the game canvas.
      */
-    class GUILine extends Line {
+    static class GUILine extends Line {
         private final Point GUILocation;
 
         public GUILine(int x, int y, LineDirection direction, Point GUILocation) {

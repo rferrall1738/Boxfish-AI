@@ -27,11 +27,9 @@ public class GamePanel extends JPanel {
             LinePlayer player = moveBooleanPair.getValue() ? game.getPlayer1() : game.getPlayer2();
 
             g.setColor(player.getColor());
-            moveBooleanPair.getKey().getLines().forEach(line -> {
-                g.fillRoundRect(getXPadding() + line.getX() * getCellDim(), getYPadding() + line.getY() * getCellDim(),
-                        line.getDirection() == LineDirection.DOWN ? 10 : getCellDim() + 10,
-                        line.getDirection() == LineDirection.DOWN ? getCellDim() + 10 : 10, 20, 20);
-            });
+            moveBooleanPair.getKey().getLines().forEach(line -> g.fillRoundRect(getXPadding() + line.getX() * getCellDim(), getYPadding() + line.getY() * getCellDim(),
+                    line.getDirection() == LineDirection.DOWN ? 10 : getCellDim() + 10,
+                    line.getDirection() == LineDirection.DOWN ? getCellDim() + 10 : 10, 20, 20));
         });
     }
     protected void drawDots(Graphics g){

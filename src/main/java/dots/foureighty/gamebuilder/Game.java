@@ -36,7 +36,7 @@ public class Game {
      * @return True if there are no more moves.
      */
     public boolean hasEnded(){
-        return gameBoard.getValidLinePlacements().size() == 0;
+        return gameBoard.getValidLinePlacements().isEmpty();
     }
 
     /***

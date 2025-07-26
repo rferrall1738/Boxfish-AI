@@ -22,7 +22,7 @@ public class RandomBot implements LinePlayer {
         while (hasToMove) {
             Line lineToPlay = board.getValidLinePlacements().get(rand.nextInt(board.getValidLinePlacements().size()));
             move.add(lineToPlay);
-            hasToMove = board.getCompletedBoxes(lineToPlay).size() > 0;
+            hasToMove = !board.getCompletedBoxes(lineToPlay).isEmpty();
             board = board.addLine(lineToPlay);
         }
         return new Move(move);

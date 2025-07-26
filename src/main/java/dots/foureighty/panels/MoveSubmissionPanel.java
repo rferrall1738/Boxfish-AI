@@ -12,16 +12,16 @@ public class MoveSubmissionPanel extends JPanel {
     private final JButton clearButton;
     private final InteractableGamePanel interactableGamePanel;
 
-    private final InteractableGamePanel.MoveStatusListener  moveStatusListener = new  InteractableGamePanel.MoveStatusListener() {
-        @Override
-        public void handleStatusUpdate() {
-            playButton.setEnabled(interactableGamePanel.isMoveComplete());
-            clearButton.setEnabled(interactableGamePanel.getNewLines().size()>0);
-        }
-    };
     public MoveSubmissionPanel(Game game, MoveHandler moveHandler) {
         this.moveHandler = moveHandler;
         setLayout(new BorderLayout());
+        InteractableGamePanel.MoveStatusListener moveStatusListener = new InteractableGamePanel.MoveStatusListener() {
+            @Override
+            public void handleStatusUpdate() {
+                playButton.setEnabled(interactableGamePanel.isMoveComplete());
+                clearButton.setEnabled(!interactableGamePanel.getNewLines().isEmpty());
+            }
+        };
         this.interactableGamePanel = new InteractableGamePanel(game, moveStatusListener);
         add(this.interactableGamePanel, BorderLayout.CENTER);
 

@@ -16,7 +16,7 @@ public class Move {
         return lines;
     }
     public Board validate(Board board) throws InvalidMoveException {
-        if (lines.size() == 0) {
+        if (lines.isEmpty()) {
             throw new EmptyMoveException();
         }
         Board newBoard = board;
@@ -32,7 +32,7 @@ public class Move {
             if (newBoard.containsLine(line)) {
                 throw new LineAlreadyExistsException(line);
             }
-            hasMove = newBoard.getCompletedBoxes(line).size() >0;
+            hasMove = !newBoard.getCompletedBoxes(line).isEmpty();
             newBoard = newBoard.addLine(line);
         }
         if(hasMove) {

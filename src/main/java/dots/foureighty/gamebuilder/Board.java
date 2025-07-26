@@ -41,7 +41,7 @@ public class Board {
      */
     public Board(int xSize, int ySize) {
         this(xSize, ySize, new BitSet(2 * xSize * ySize - xSize - ySize));
-        if(xSize <= 0 || ySize <= 0 || 2 * xSize * ySize - xSize - ySize > Integer.MAX_VALUE) {
+        if(xSize <= 0 || ySize <= 0 || 2 * xSize * ySize - xSize - ySize >= Integer.MAX_VALUE) {
             throw new IllegalArgumentException("Unsupported board size");
         }
     }
@@ -90,7 +90,7 @@ public class Board {
         //Move down the grid until you reach the correct row.
         // Each row that has been passed has (2x-1) lines. (Each dot can have a line down or to the right,
         // the last dot in the row can only go down)
-        long index = (long) (((long) getXSize() << 1) - 1) * line.getY();
+        long index = (((long) getXSize() << 1) - 1) * line.getY();
 
         //Move across the row to the desired column.
         index += ((long) line.getX() << 1);
