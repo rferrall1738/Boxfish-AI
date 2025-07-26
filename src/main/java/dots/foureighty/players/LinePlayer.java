@@ -1,11 +1,11 @@
 package dots.foureighty.players;
 
-import dots.foureighty.gamebuilder.NewGame;
+import dots.foureighty.gamebuilder.Game;
 
 import java.awt.*;
 
 public interface LinePlayer {
-    Move getMove(NewGame gameState);
+    Move getMove(Game gameState);
     String getName();
     Color getColor();
 }

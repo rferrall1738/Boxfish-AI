@@ -1,14 +1,7 @@
 // File: GameInterface.java
 package dots.foureighty;
 
-import dots.foureighty.lines.GUILine;
-import dots.foureighty.lines.Line;
-
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.*;
 
 public class GameInterface extends JFrame {
         /*

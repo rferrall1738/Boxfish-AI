@@ -1,6 +1,6 @@
 package dots.foureighty.players;
 
-import dots.foureighty.exceptions.InvalidMoveException;
+import dots.foureighty.exceptions.*;
 import dots.foureighty.gamebuilder.Board;
 import dots.foureighty.lines.Line;
 
@@ -15,7 +15,29 @@ public class Move {
     public ArrayList<Line> getLines() {
         return lines;
     }
-    public void validate(Board board) throws InvalidMoveException {
-        //TODO: add logic
+    public Board validate(Board board) throws InvalidMoveException {
+        if (lines.size() == 0) {
+            throw new EmptyMoveException();
+        }
+        Board newBoard = board;
+        boolean hasMove = true;
+
+        for (Line line : lines) {
+            if(!hasMove) {
+                throw new ExtraMoveException(line);
+            }
+            if (newBoard.getIndexOfLine(line) == -1) {
+                throw new LineOutOfBoundsException(line);
+            }
+            if (newBoard.containsLine(line)) {
+                throw new LineAlreadyExistsException(line);
+            }
+            hasMove = newBoard.getCompletedBoxes(line).size() >0;
+            newBoard = newBoard.addLine(line);
+        }
+        if(hasMove) {
+            throw new MissingExtraMoveException();
+        }
+        return newBoard;
     }
 }

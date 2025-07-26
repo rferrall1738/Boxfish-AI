@@ -6,17 +6,16 @@ import javafx.util.Pair;
 
 import java.util.ArrayList;
 
-public class NewGame {
-    private final Board gameBoard;
+public class Game {
+    private Board gameBoard;
     private final LinePlayer player1;
     private final LinePlayer player2;
 
-    //All the moves that have been made, the boolean is if the move was made by player1
-    private ArrayList<Pair<Move,Boolean>> moves = new  ArrayList<>();
+    private final ArrayList<Pair<Move,Boolean>> moves = new  ArrayList<>();
 
     private boolean isPlayer1Turn = true;
 
-    protected NewGame(Board board, LinePlayer player1, LinePlayer player2) {
+    protected Game(Board board, LinePlayer player1, LinePlayer player2) {
         this.gameBoard = board;
         this.player1 = player1;
         this.player2 = player2;
@@ -32,15 +31,26 @@ public class NewGame {
         return this.isPlayer1Turn;
     }
 
+    /***
+     * Checks if there are any moves left to play
+     * @return True if there are no more moves.
+     */
     public boolean hasEnded(){
-        //todo: Add logic
-        return false;
+        return gameBoard.getValidLinePlacements().size() == 0;
     }
 
+    /***
+     * Get the gameboard
+     * @return The game board
+     */
     public Board getGameBoard(){
         return this.gameBoard;
     }
 
+    /***
+     * Get the played moves
+     * @return A list of tuples, the first contains the move, the second value is if it was played by player 1.
+     */
     public ArrayList<Pair<Move,Boolean>> getMoves(){
         return this.moves;
     }
@@ -48,8 +58,7 @@ public class NewGame {
         while (!hasEnded()) {
             LinePlayer currentPlayer = isPlayer1Turn ? player1 : player2;
             Move playedMove = currentPlayer.getMove(this);
-
-            playedMove.validate(gameBoard); // Will throw an exception if the move is bad
+            this.gameBoard = playedMove.validate(gameBoard); // Will throw an exception if the move is bad
 
             moves.add(new Pair<>(playedMove,isPlayer1Turn()));
             isPlayer1Turn = !isPlayer1Turn;

@@ -1,12 +1,11 @@
 package dots.foureighty.exceptions;
 
 import dots.foureighty.lines.Line;
-import dots.foureighty.players.LinePlayer;
 
 public abstract class BadLineException extends InvalidMoveException {
   private final Line line;
-    public BadLineException(String message, LinePlayer player, Line line) {
-        super(message, player);
+    public BadLineException(String message, Line line) {
+        super(message);
         this.line = line;
     }
 }

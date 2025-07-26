@@ -1,7 +1,7 @@
 package dots.foureighty.panels;
 
 import dots.foureighty.gamebuilder.Board;
-import dots.foureighty.gamebuilder.NewGame;
+import dots.foureighty.gamebuilder.Game;
 import dots.foureighty.lines.LineDirection;
 import dots.foureighty.players.LinePlayer;
 
@@ -9,18 +9,20 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GamePanel extends JPanel {
-    protected final NewGame game;
+    protected final Game game;
 
-    public GamePanel(NewGame game) {
+    public GamePanel(Game game) {
         this.game = game;
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
-        Board gameBoard = game.getGameBoard();
-        // Draw played lines
+        drawBoxes(g);
+        drawPlayedLines(g);
+        drawDots(g);
+    }
+    protected void drawPlayedLines(Graphics g){
         game.getMoves().forEach(moveBooleanPair -> {
             LinePlayer player = moveBooleanPair.getValue() ? game.getPlayer1() : game.getPlayer2();
 
@@ -31,9 +33,9 @@ public class GamePanel extends JPanel {
                         line.getDirection() == LineDirection.DOWN ? getCellDim() + 10 : 10, 20, 20);
             });
         });
-
-
-        // Draw dots
+    }
+    protected void drawDots(Graphics g){
+        Board gameBoard = game.getGameBoard();
         g.setColor(Color.BLACK);
         for (int i = 0; i < gameBoard.getXSize(); i++) {
             for (int j = 0; j < gameBoard.getYSize(); j++) {
@@ -41,20 +43,28 @@ public class GamePanel extends JPanel {
             }
         }
     }
+    protected void drawBoxes(Graphics g){
+        //TODO: Draw these
+    }
 
-    private int getYPadding() {
+    protected int getYPadding() {
         return (getHeight() - (game.getGameBoard().getYSize() - 1) * getCellDim()) / 2;
     }
 
-    private int getXPadding() {
+    protected int getXPadding() {
         return (getWidth() - (game.getGameBoard().getXSize() - 1) * getCellDim()) / 2;
     }
 
-    private int getSpaceSize() {
+    protected int getSpaceSize() {
         return (int) (Math.min(getWidth(), getHeight()) * 0.75);
     }
 
-    private int getCellDim() {
+    protected int getCellDim() {
         return getSpaceSize() / (Math.max(game.getGameBoard().getXSize(), game.getGameBoard().getYSize()) - 1);
+    }
+
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(500, 500);
     }
 }

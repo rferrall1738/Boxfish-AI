@@ -2,6 +2,6 @@ package dots.foureighty.panels;
 
 import dots.foureighty.players.Move;
 
-public interface MoveListener {
+public interface MoveHandler {
     void playMove(Move move);
 }

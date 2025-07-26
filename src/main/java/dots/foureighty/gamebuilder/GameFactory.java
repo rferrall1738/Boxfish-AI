@@ -83,8 +83,8 @@ public class GameFactory {
      * Builds a game object from the GameFactory.
      * @return Build game object.
      */
-    public NewGame build() {
-        long numberOfPossibleLines = 2 * getXSize() * getYSize() - getXSize() - getYSize();
+    public Game build() {
+        long numberOfPossibleLines = 2L * getXSize() * getYSize() - getXSize() - getYSize();
 
         if (numberOfPossibleLines < 0 || numberOfPossibleLines > Integer.MAX_VALUE) {
             throw new RuntimeException("Unsupported Board Size");
@@ -102,11 +102,11 @@ public class GameFactory {
         if (gameBoard == null) {
             gameBoard = new Board(xSize, ySize);
         }
-        return new NewGame(gameBoard,player1,player2);
+        return new Game(gameBoard,player1,player2);
     }
 
     private Color invertColor(Color color){
-        return  new Color(color.getRGB() ^ 0xFF);
+        return  new Color(~color.getRGB() ^ 0x07);
     }
 
 }
