@@ -1,7 +1,7 @@
-package dots.foureighty.panels;
+package dots.foureighty.gui.ui;
 
-import dots.foureighty.gamebuilder.Game;
-import dots.foureighty.players.Move;
+import dots.foureighty.game.GameSnapshot;
+import dots.foureighty.lines.Move;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +12,7 @@ public class MoveSubmissionPanel extends JPanel {
     private final JButton clearButton;
     private final InteractableGamePanel interactableGamePanel;
 
-    public MoveSubmissionPanel(Game game, MoveHandler moveHandler) {
+    public MoveSubmissionPanel(GameSnapshot game, MoveHandler moveHandler) {
         this.moveHandler = moveHandler;
         setLayout(new BorderLayout());
         InteractableGamePanel.MoveStatusListener moveStatusListener = new InteractableGamePanel.MoveStatusListener() {

@@ -1,8 +1,8 @@
-package dots.foureighty.panels;
+package dots.foureighty.gui.ui;
 
-import dots.foureighty.gamebuilder.Board;
-import dots.foureighty.gamebuilder.Game;
-import dots.foureighty.lines.BoxSide;
+import dots.foureighty.game.GameSnapshot;
+import dots.foureighty.game.boards.Board;
+import dots.foureighty.gui.GamePanel;
 import dots.foureighty.lines.Line;
 import dots.foureighty.lines.LineDirection;
 
@@ -11,7 +11,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.Map;
 
 /***
@@ -20,9 +19,13 @@ import java.util.Map;
  */
 class InteractableGamePanel extends GamePanel {
     private boolean moveComplete = false;
-    private final ArrayList<Line> linesToPlace = new ArrayList<>();
-    private final ArrayList<Point> newBoxes = new ArrayList<>();
+    private final ArrayList<Line> queuedLines = new ArrayList<>();
+    private final ArrayList<Point> queuedBoxes = new ArrayList<>();
     private final MoveStatusListener moveStatusListener;
+
+    private static final float TEMP_LINE_ALPHA = 0.7f;
+    private static final float TEMP_BOX_ALPHA = 0.3f;
+
     /***
      * Interface to allow the parent to be notified when a move is ready to be sent.
      */
@@ -35,7 +38,7 @@ class InteractableGamePanel extends GamePanel {
      * @param game Dots and boxes game instance
      * @param moveStatusListener method that is called when the gameboard has a valid move queued
      */
-    public InteractableGamePanel(Game game, MoveStatusListener moveStatusListener) {
+    public InteractableGamePanel(GameSnapshot game, MoveStatusListener moveStatusListener) {
         super(game);
         this.moveStatusListener = moveStatusListener;
         this.addMouseListener(new MouseAdapter() {
@@ -64,7 +67,7 @@ class InteractableGamePanel extends GamePanel {
      */
     private ArrayList<GUILine> getValidLines() {
         ArrayList<GUILine> walls = new ArrayList<>();
-        game.getGameBoard().getValidLinePlacements().forEach(line -> {
+        game.getBoard().getUnplayedPositions().forEach(line -> {
             Point point = line.getDirection() == LineDirection.RIGHT
                     ? new Point((int) (getXPadding() + line.getX() * getCellDim() + (getCellDim() * 0.5)) + 5,
                     getYPadding() + line.getY() * getCellDim() + 5)
@@ -92,74 +95,57 @@ class InteractableGamePanel extends GamePanel {
                 .orElse(null);
     }
     private Color getPlayersColor(){
-        return (game.isPlayer1Turn() ? game.getPlayer1() : game.getPlayer2()).getColor();
+        return game.isPlayer1Turn() ? game.getPlayer1Color() : game.getPlayer2Color();
     }
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Color color = getPlayersColor();
-        Color transparentColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), 50);
-        g.setColor(transparentColor);
-        linesToPlace.forEach((line) -> this.drawNewLines(g,line));
+
+        g.setColor(setAlpha(getPlayersColor(), TEMP_BOX_ALPHA).darker());
+        queuedBoxes.forEach((newBox) -> drawBox(g, newBox));
+
+        g.setColor(setAlpha(getPlayersColor(), TEMP_LINE_ALPHA));
+        queuedLines.forEach((line) -> drawLine(g, line));
+
     }
 
-    private void drawNewLines(Graphics g, Line line) {
-        g.fillRoundRect(getXPadding() + line.getX() * getCellDim(), getYPadding() + line.getY() * getCellDim(),
-                line.getDirection() == LineDirection.DOWN ? 10 : getCellDim() + 10,
-                line.getDirection() == LineDirection.DOWN ? getCellDim() + 10 : 10, 20, 20);
-    }
-    private void drawNewBoxes(Graphics g, Point cornerOfBox) {
-        //TODO: Implement
-    }
 
     private void placeLine(Point clickPoint) {
         GUILine nearest = findLineNearPoint(clickPoint, getValidLines());
         if (nearest == null) {
             return;
         }
-        if (linesToPlace.contains(nearest) || game.getGameBoard().containsLine(nearest)) {
+        if (queuedLines.contains(nearest) || game.getBoard().containsLine(nearest)) {
             return;
         }
-        Board futureBoard = game.getGameBoard();
+        Board futureBoard = game.getBoard();
 
-        for (Line l : linesToPlace) {
-            futureBoard = futureBoard.addLine(l);
+        for (Line l : queuedLines) {
+            futureBoard = futureBoard.append(l);
         }
 
-        linesToPlace.add(nearest);
-        if (linesToPlace.size() == 1) {
+        queuedLines.add(nearest);
+        if (queuedLines.size() == 1) {
             moveStatusListener.handleStatusUpdate();
         }
 
-        EnumSet<BoxSide> completedBoxes = futureBoard.getCompletedBoxes(nearest);
+        ArrayList<Point> newBoxes = futureBoard.getCompletedBoxLocations(nearest);
+        queuedBoxes.addAll(newBoxes);
+        if (newBoxes.isEmpty() || futureBoard.getUnplayedPositions().size() == 1) {
+            setIsMoveComplete(true);
+        }
 
-        if (completedBoxes.isEmpty()) {
-            setIsMoveComplete(true);
-        } else {
-            if (completedBoxes.contains(BoxSide.LEFT)) {
-                newBoxes.add(new Point(nearest.getX() - 1, nearest.getY()));
-            }
-            if (completedBoxes.contains(BoxSide.RIGHT) || completedBoxes.contains(BoxSide.BELOW)) {
-                newBoxes.add(new Point(nearest.getX(), nearest.getY()));
-            }
-            if (completedBoxes.contains(BoxSide.ABOVE)) {
-                newBoxes.add(new Point(nearest.getX(), nearest.getY() + 1));
-            }
-        }
-        if (linesToPlace.size() == game.getGameBoard().getLineBitSet().cardinality()) {
-            setIsMoveComplete(true);
-        }
 
         repaint();
     }
 
     public ArrayList<Line> getNewLines() {
-        return linesToPlace;
+        return queuedLines;
     }
 
     public void clearQueuedMove() {
-        linesToPlace.clear();
-        newBoxes.clear();
+        queuedLines.clear();
+        queuedBoxes.clear();
         setIsMoveComplete(false);
         repaint();
     }

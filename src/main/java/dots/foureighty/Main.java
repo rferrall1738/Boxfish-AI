@@ -1,16 +1,18 @@
 package dots.foureighty;
 
 
-import dots.foureighty.gamebuilder.GameFactory;
-import dots.foureighty.players.RandomBot;
-
-import javax.swing.*;
+import dots.foureighty.game.GameFactory;
+import dots.foureighty.gui.GameWatcher;
+import dots.foureighty.players.robots.DelayedRandomBot;
 
 public class Main {
-    public static final JFrame MAIN_FRAME = new JFrame("BoxFish");
     public static void main(String[] args) {
-        MAIN_FRAME.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        MAIN_FRAME.setResizable(false);
-        new GameFactory().setXSize(5).setYSize(5).setPlayer2(new RandomBot()).build().play();
+        for (int i = 0; i < 20; i++) {
+            new GameFactory().withXSize(10).withYSize(10)
+                    .withUpdateListener(new GameWatcher())
+                    .withPlayer1(new DelayedRandomBot())
+                    .withPlayer2(new DelayedRandomBot()).build().play();
+        }
+
     }
 }
