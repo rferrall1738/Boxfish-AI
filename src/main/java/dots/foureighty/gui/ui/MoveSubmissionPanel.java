@@ -18,7 +18,7 @@ public class MoveSubmissionPanel extends JPanel {
         InteractableGamePanel.MoveStatusListener moveStatusListener = new InteractableGamePanel.MoveStatusListener() {
             @Override
             public void handleStatusUpdate() {
-                playButton.setEnabled(interactableGamePanel.isMoveComplete());
+                playButton.setEnabled(interactableGamePanel.getMoveBuilder().isComplete());
                 clearButton.setEnabled(!interactableGamePanel.getNewLines().isEmpty());
             }
         };

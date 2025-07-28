@@ -1,16 +1,17 @@
 package dots.foureighty.gui.ui;
 
 import dots.foureighty.game.GameSnapshot;
-import dots.foureighty.game.boards.Board;
 import dots.foureighty.gui.GamePanel;
 import dots.foureighty.lines.Line;
 import dots.foureighty.lines.LineDirection;
+import dots.foureighty.lines.MoveBuilder;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 
 /***
@@ -18,13 +19,10 @@ import java.util.Map;
  * @see GamePanel Displays the board without interaction
  */
 class InteractableGamePanel extends GamePanel {
-    private boolean moveComplete = false;
-    private final ArrayList<Line> queuedLines = new ArrayList<>();
-    private final ArrayList<Point> queuedBoxes = new ArrayList<>();
     private final MoveStatusListener moveStatusListener;
-
     private static final float TEMP_LINE_ALPHA = 0.7f;
     private static final float TEMP_BOX_ALPHA = 0.3f;
+    private final MoveBuilder moveBuilder = new MoveBuilder(this.game.getBoard());
 
     /***
      * Interface to allow the parent to be notified when a move is ready to be sent.
@@ -44,20 +42,12 @@ class InteractableGamePanel extends GamePanel {
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (isEnabled() && !isMoveComplete()){
+                if (isEnabled() && !moveBuilder.isComplete()) {
                     Point clickPoint = e.getPoint();
                     placeLine(clickPoint);
                 }
             }
         });
-    }
-
-    public void setIsMoveComplete(boolean moveComplete) {
-        this.moveComplete = moveComplete;
-        moveStatusListener.handleStatusUpdate();
-    }
-    public boolean isMoveComplete(){
-        return moveComplete;
     }
 
     /***
@@ -102,51 +92,34 @@ class InteractableGamePanel extends GamePanel {
         super.paintComponent(g);
 
         g.setColor(setAlpha(getPlayersColor(), TEMP_BOX_ALPHA).darker());
-        queuedBoxes.forEach((newBox) -> drawBox(g, newBox));
 
+        for (Point newBox : moveBuilder.getNewBoxes()) {
+            drawBox(g, newBox);
+        }
         g.setColor(setAlpha(getPlayersColor(), TEMP_LINE_ALPHA));
-        queuedLines.forEach((line) -> drawLine(g, line));
 
+        for (Line line : moveBuilder.getLines()) {
+            drawLine(g, line);
+        }
     }
 
 
     private void placeLine(Point clickPoint) {
         GUILine nearest = findLineNearPoint(clickPoint, getValidLines());
-        if (nearest == null) {
+        if (nearest == null || !moveBuilder.canPlay(nearest)) {
             return;
         }
-        if (queuedLines.contains(nearest) || game.getBoard().containsLine(nearest)) {
-            return;
-        }
-        Board futureBoard = game.getBoard();
-
-        for (Line l : queuedLines) {
-            futureBoard = futureBoard.append(l);
-        }
-
-        queuedLines.add(nearest);
-        if (queuedLines.size() == 1) {
-            moveStatusListener.handleStatusUpdate();
-        }
-
-        ArrayList<Point> newBoxes = futureBoard.getCompletedBoxLocations(nearest);
-        queuedBoxes.addAll(newBoxes);
-        if (newBoxes.isEmpty() || futureBoard.getUnplayedPositions().size() == 1) {
-            setIsMoveComplete(true);
-        }
-
-
+        moveBuilder.addLine(nearest);
+        moveStatusListener.handleStatusUpdate();
         repaint();
     }
 
     public ArrayList<Line> getNewLines() {
-        return queuedLines;
+        return (ArrayList<Line>) Arrays.asList(moveBuilder.getLines());
     }
 
     public void clearQueuedMove() {
-        queuedLines.clear();
-        queuedBoxes.clear();
-        setIsMoveComplete(false);
+        moveBuilder.clear();
         repaint();
     }
 
@@ -168,5 +141,7 @@ class InteractableGamePanel extends GamePanel {
         }
     }
 
-
+    public MoveBuilder getMoveBuilder() {
+        return moveBuilder;
+    }
 }

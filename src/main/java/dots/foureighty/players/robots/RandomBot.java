@@ -1,9 +1,9 @@
 package dots.foureighty.players.robots;
 
 import dots.foureighty.game.GameSnapshot;
-import dots.foureighty.game.boards.Board;
 import dots.foureighty.lines.Line;
 import dots.foureighty.lines.Move;
+import dots.foureighty.lines.MoveBuilder;
 import dots.foureighty.players.Player;
 
 import java.awt.*;
@@ -14,6 +14,8 @@ import java.util.Random;
  * AI that only plays random moves.
  */
 public class RandomBot extends Player {
+    private final static Random RANDOM = new Random();
+
 
     public RandomBot() {
         super("Random Bot", Color.MAGENTA);
@@ -21,17 +23,12 @@ public class RandomBot extends Player {
 
     @Override
     public Move getMove(GameSnapshot gameState) {
-        Board board = gameState.getBoard();
-        ArrayList<Line> move = new ArrayList<>();
-        Random rand = new Random();
-        boolean hasToMove = true;
-        while (hasToMove && !board.getUnplayedPositions().isEmpty()) {
-            Line lineToPlay = board.getUnplayedPositions().get(rand.nextInt(board.getUnplayedPositions().size()));
-            move.add(lineToPlay);
-            hasToMove = !board.getCompletedBoxes(lineToPlay).isEmpty();
-            board = board.append(lineToPlay);
+        MoveBuilder moveBuilder = new MoveBuilder(gameState.getBoard());
+        while (!moveBuilder.isComplete()) {
+            ArrayList<Line> possibleLines = moveBuilder.getCurrentBoard().getUnplayedPositions();
+            moveBuilder.addLine(possibleLines.get(RANDOM.nextInt(possibleLines.size())));
         }
-        return new Move(move);
+        return moveBuilder.build();
     }
 
 }
