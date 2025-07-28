@@ -115,7 +115,7 @@ class InteractableGamePanel extends GamePanel {
     }
 
     public ArrayList<Line> getNewLines() {
-        return (ArrayList<Line>) Arrays.asList(moveBuilder.getLines());
+        return new ArrayList<>(Arrays.asList(moveBuilder.getLines()));
     }
 
     public void clearQueuedMove() {
