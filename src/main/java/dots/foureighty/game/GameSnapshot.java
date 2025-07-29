@@ -1,8 +1,7 @@
 package dots.foureighty.game;
 
 import dots.foureighty.game.boards.Board;
-import dots.foureighty.lines.Move;
-import javafx.util.Pair;
+import dots.foureighty.lines.PlayedMove;
 
 import java.awt.*;
 
@@ -17,11 +16,11 @@ public class GameSnapshot {
     private final Color player2Color;
     private final Point[] player1Boxes;
     private final Point[] player2Boxes;
-    private final Pair<Move, Boolean>[] playedMoves;
+    private final PlayedMove[] playedMoves;
     private final boolean isPlayer1Turn;
     private final boolean hasEnded;
 
-    GameSnapshot(Board board, String player1Name, String player2Name, Color player1Color, Color player2Color, Point[] player1Boxes, Point[] player2Boxes, Pair<Move, Boolean>[] playedMoves, boolean isPlayer1Turn, boolean hasEnded) {
+    GameSnapshot(Board board, String player1Name, String player2Name, Color player1Color, Color player2Color, Point[] player1Boxes, Point[] player2Boxes, PlayedMove[] playedMoves, boolean isPlayer1Turn, boolean hasEnded) {
         this.board = board;
         this.player1Name = player1Name;
         this.player2Name = player2Name;
@@ -62,7 +61,7 @@ public class GameSnapshot {
         return player2Boxes;
     }
 
-    public Pair<Move, Boolean>[] getPlayedMoves() {
+    public PlayedMove[] getPlayedMoves() {
         return playedMoves;
     }
 

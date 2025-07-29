@@ -5,8 +5,7 @@ import dots.foureighty.game.boards.Board;
 import dots.foureighty.game.boards.StandardBoards;
 import dots.foureighty.lines.Line;
 import dots.foureighty.lines.LineDirection;
-import dots.foureighty.lines.Move;
-import javafx.util.Pair;
+import dots.foureighty.lines.PlayedMove;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,10 +36,10 @@ public class GamePanel extends JPanel {
 
     private void drawLines(Graphics g) {
         Board board = StandardBoards.AMERICAN.generateBoard(game.getBoard().getXSize(), game.getBoard().getYSize());
-        for (Pair<Move, Boolean> playedMove : game.getPlayedMoves()) { //Draw the player-made lines
-            Color playerColor = playedMove.getValue() ? game.getPlayer1Color() : game.getPlayer2Color();
+        for (PlayedMove move : game.getPlayedMoves()) { //Draw the player-made lines
+            Color playerColor = move.isFromPlayerOne() ? game.getPlayer1Color() : game.getPlayer2Color();
             g.setColor(playerColor);
-            for (Line line : playedMove.getKey().getLines()) {
+            for (Line line : move.getLines()) {
                 board = board.append(line);
                 drawLine(g, line);
             }

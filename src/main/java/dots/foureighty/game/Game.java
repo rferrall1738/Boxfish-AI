@@ -4,10 +4,10 @@ import dots.foureighty.exceptions.*;
 import dots.foureighty.game.boards.Board;
 import dots.foureighty.lines.Line;
 import dots.foureighty.lines.Move;
+import dots.foureighty.lines.PlayedMove;
 import dots.foureighty.listeners.GameUpdateListener;
 import dots.foureighty.listeners.GameUpdateType;
 import dots.foureighty.players.Player;
-import javafx.util.Pair;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ public class Game {
     private final ArrayList<Point> player2Boxes = new ArrayList<>();
     private final ArrayList<GameUpdateListener> gameUpdateListeners = new ArrayList<>();
 
-    private final ArrayList<Pair<Move, Boolean>> moves = new ArrayList<>();
+    private final ArrayList<PlayedMove> moves = new ArrayList<>();
 
     private boolean isPlayer1Turn = true;
 
@@ -63,8 +63,8 @@ public class Game {
      * Get the played moves
      * @return A list of tuples, the first contains the move, the second value is if it was played by player 1.
      */
-    public ArrayList<Pair<Move, Boolean>> getMoves() {
-        return (ArrayList<Pair<Move, Boolean>>) this.moves.clone();
+    public ArrayList<PlayedMove> getMoves() {
+        return (ArrayList<PlayedMove>) this.moves.clone();
     }
 
     public void play() {
@@ -74,8 +74,8 @@ public class Game {
                 Player currentPlayer = isPlayer1Turn() ? player1 : player2;
                 Move playedMove = currentPlayer.getMove(this.generateSnapshot());
                 playMove(playedMove);
+                moves.add(new PlayedMove(playedMove.getLines(), isPlayer1Turn()));
 
-                moves.add(new Pair<>(playedMove, isPlayer1Turn()));
                 isPlayer1Turn = !isPlayer1Turn;
                 notifyUpdateListeners(GameUpdateType.MOVE_PLAYED);
             }
@@ -119,7 +119,7 @@ public class Game {
     public GameSnapshot generateSnapshot() {
         return new GameSnapshot(getGameBoard().clone(), getPlayer1().getName(), getPlayer2().getName(), getPlayer1().getColor(), getPlayer2().getColor(),
                 getPlayer1Boxes().toArray(new Point[0]), getPlayer2Boxes().toArray(new Point[0]),
-                getMoves().toArray(new Pair[0]), isPlayer1Turn(), !isActive());
+                getMoves().toArray(new PlayedMove[0]), isPlayer1Turn(), !isActive());
     }
 
     public ArrayList<Point> getPlayer1Boxes() {
