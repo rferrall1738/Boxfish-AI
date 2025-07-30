@@ -130,9 +130,7 @@ public class Board {
      * @return A list of lines that haven't been played
      */
     public ArrayList<Line> getUnplayedPositions() {
-        BitSet inverseLines = (BitSet) encodedBoard.clone();
-        inverseLines.flip(0,2 * xSize * ySize - xSize - ySize);
-        return (ArrayList<Line>) inverseLines.stream().mapToObj(this::getLineFromIndex).collect(Collectors.toList());
+        return (ArrayList<Line>) getInverseBitSet().stream().mapToObj(this::getLineFromIndex).collect(Collectors.toList());
     }
 
     /***
@@ -273,6 +271,16 @@ public class Board {
         return (BitSet) encodedBoard.clone();
     }
 
+    /***
+     * Get a copy of the board bitset
+     * @return Clone of the board's bitset
+     */
+    public BitSet getInverseBitSet() {
+        BitSet inverseLines = (BitSet) encodedBoard.clone();
+        inverseLines.flip(0, 2 * xSize * ySize - xSize - ySize);
+        return inverseLines;
+    }
+
     @Override
     public Board clone() {
         return new Board(this.xSize,this.ySize,getLineBitSet());
@@ -300,6 +308,18 @@ public class Board {
         BitSet newBoard = getLineBitSet();
         newBoard.set(index);
         return new Board(this.xSize,this.ySize,newBoard);
+    }
+
+    /***
+     * Clones the board and removes a line from the board
+     * @param line The line to remove
+     * @return a new board with the line removed
+     */
+    public Board remove(Line line) {
+        int index = getIndexFromLine(line);
+        BitSet newBoard = getLineBitSet();
+        newBoard.set(index, 0);
+        return new Board(this.xSize, this.ySize, newBoard);
     }
 
     @Override

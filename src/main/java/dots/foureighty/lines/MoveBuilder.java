@@ -61,6 +61,13 @@ public class MoveBuilder {
         return !currentBoard.containsLine(line);
     }
 
+    public void removeLastLine() {
+        moves.removeLast();
+        createdBoxes.removeLast();
+        Board newBoard = startingBoard;
+    }
+
+
     public void clear() {
         currentBoard = startingBoard;
         moves.clear();

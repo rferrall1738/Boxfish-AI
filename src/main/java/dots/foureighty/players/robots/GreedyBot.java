@@ -16,7 +16,11 @@ public class GreedyBot extends Player {
 
     @Override
     public Move getMove(GameSnapshot gameState) {
-        MoveBuilder moveBuilder = new MoveBuilder(gameState.getBoard());
+        return getMaximizingMove(gameState.getBoard());
+    }
+
+    public Move getMaximizingMove(Board board) {
+        MoveBuilder moveBuilder = new MoveBuilder(board);
         while (!moveBuilder.isComplete()) {
             Line foundLine = searchForBox(moveBuilder.getCurrentBoard());
             if (foundLine == null) {

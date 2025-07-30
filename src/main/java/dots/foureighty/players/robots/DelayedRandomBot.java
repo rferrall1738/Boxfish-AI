@@ -10,17 +10,21 @@ import java.awt.*;
  * Randombot but it waits 0.5 seconds before moving
  */
 public class DelayedRandomBot extends TimedPlayer {
-    public DelayedRandomBot() {
+    private final int delay;
+    private final RandomBot randomBot = new RandomBot();
+
+
+    public DelayedRandomBot(int delay) {
         super("Delayed Random Bot", Color.ORANGE);
+        this.delay = delay;
     }
 
 
     @Override
     protected int getTimeLimit() {
-        return 500;
+        return delay;
     }
 
-    private final RandomBot randomBot = new RandomBot();
 
     @Override
     protected void searchForBestMove(GameSnapshot gameState, MovePackage bestMove) {
