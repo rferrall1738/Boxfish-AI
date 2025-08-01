@@ -4,14 +4,10 @@ import dots.foureighty.game.GameSnapshot;
 import dots.foureighty.lines.Move;
 import dots.foureighty.lines.packages.ExpirableMovePackage;
 import dots.foureighty.lines.packages.MovePackage;
-import dots.foureighty.players.robots.RandomBot;
+import dots.foureighty.players.robots.dumb.RandomBot;
 
-import java.awt.*;
+public abstract class TimedPlayer implements Player {
 
-public abstract class TimedPlayer extends Player {
-    public TimedPlayer(String name, Color color) {
-        super(name, color);
-    }
 
     /***
      * Max mount of time before a move can be made;

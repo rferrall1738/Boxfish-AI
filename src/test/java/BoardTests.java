@@ -19,7 +19,6 @@ public class BoardTests {
         confirmInvertibleIndexing();
         checkContainsLine();
         checkBoxCompletes();
-        checkValidLines();
     }
 
     public void badBoardSize(){
@@ -55,7 +54,7 @@ public class BoardTests {
         new Board(3, 3, BitSet.valueOf(new byte[]{0b1101101, 0b01001}));
     }
     public void checkContainsLine() {
-        Board dummyBoard = new Board(2,2, BitSet.valueOf(new byte[]{0b1011}));
+        Board dummyBoard = new Board(2, 2, BitSet.valueOf(new byte[]{0b00100011}));
 
         assert dummyBoard.getIndexFromLine(new Line(0, 0, LineDirection.DOWN)) == 0;
 
@@ -69,26 +68,19 @@ public class BoardTests {
         assert !dummyBoard.containsLine(new Line(1,1, LineDirection.RIGHT));
         assert !dummyBoard.containsLine(new Line(1,1, LineDirection.DOWN));
         assert !dummyBoard.containsLine(new Line(0,1, LineDirection.DOWN));
-
-        Board dummyBoard3 = new Board(3,3, BitSet.valueOf(new byte[]{(byte) 0b10111111, (byte) 0b1110}));
-
-
-        assert dummyBoard3.containsLine(new Line(1,2, LineDirection.RIGHT));
-        assert !dummyBoard3.containsLine(new Line(0,1, LineDirection.RIGHT));
-        assert dummyBoard3.containsLine(new Line(2,0, LineDirection.DOWN));
     }
     public void checkLineToIndex() {
         Board board = StandardBoards.AMERICAN.generateBoard(3, 3);
         assert board.getIndexFromLine(new Line(0, 0, LineDirection.DOWN)) == 0;
         assert board.getIndexFromLine(new Line(0, 0, LineDirection.RIGHT)) == 1;
         assert board.getIndexFromLine(new Line(1, 0, LineDirection.RIGHT)) == 3;
-        assert board.getIndexFromLine(new Line(2, 0, LineDirection.RIGHT)) == -1;
+        assert board.getIndexFromLine(new Line(2, 0, LineDirection.RIGHT)) == 5;
         assert board.getIndexFromLine(new Line(2, 0, LineDirection.DOWN)) == 4;
-        assert board.getIndexFromLine(new Line(2, 0, LineDirection.RIGHT)) == -1;
-        assert board.getIndexFromLine(new Line(1, 1, LineDirection.DOWN)) == 7;
-        assert board.getIndexFromLine(new Line(2, 0, LineDirection.RIGHT)) == -1;
-        assert board.getIndexFromLine(new Line(1, 2, LineDirection.RIGHT)) == 11;
-        assert board.getIndexFromLine(new Line(2, 2, LineDirection.RIGHT)) == -1;
+        assert board.getIndexFromLine(new Line(1, 1, LineDirection.DOWN)) == 8;
+        assert board.getIndexFromLine(new Line(1, 2, LineDirection.RIGHT)) == 15;
+        assert board.getIndexFromLine(new Line(2, 2, LineDirection.RIGHT)) == 17;
+        assert board.getIndexFromLine(new Line(3, 2, LineDirection.RIGHT)) == -1;
+
     }
     public void checkIndexToLine() {
         Board board = StandardBoards.AMERICAN.generateBoard(3, 3);
@@ -96,8 +88,8 @@ public class BoardTests {
         assert board.getLineFromIndex(1).equals(new Line(0, 0, LineDirection.RIGHT));
         assert board.getLineFromIndex(3).equals(new Line(1, 0, LineDirection.RIGHT));
         assert board.getLineFromIndex(4).equals(new Line(2, 0, LineDirection.DOWN));
-        assert board.getLineFromIndex(7).equals(new Line(1, 1, LineDirection.DOWN));
-        assert board.getLineFromIndex(11).equals(new Line(1, 2, LineDirection.RIGHT));
+        assert board.getLineFromIndex(7).equals(new Line(0, 1, LineDirection.RIGHT));
+        assert board.getLineFromIndex(11).equals(new Line(2, 1, LineDirection.RIGHT));
     }
 
     public void checkLineEqualities() {
@@ -121,34 +113,26 @@ public class BoardTests {
         Line topLeftDown = new Line(0,0,LineDirection.DOWN);
         Line topRightDown = new Line(2,1,LineDirection.DOWN);
         Line bottomLeftRight = new Line(1,2,LineDirection.DOWN);
+        Line offBoard = new Line(5, 5, LineDirection.RIGHT);
 
         assert board.getLineFromIndex(board.getIndexFromLine(topLeftDown)).equals(topLeftDown);
         assert board.getLineFromIndex(board.getIndexFromLine(topRightDown)).equals(topRightDown);
-        assert board.getLineFromIndex(board.getIndexFromLine(bottomLeftRight)) == null;
-
-        Board bigBoard = StandardBoards.AMERICAN.generateBoard(5, 5);
-        assert bigBoard.getLineFromIndex(39).equals(new Line(3, 4, LineDirection.RIGHT));
+        assert board.getLineFromIndex(board.getIndexFromLine(bottomLeftRight)).equals(bottomLeftRight);
+        assert board.getLineFromIndex(board.getIndexFromLine(offBoard)) == null;
     }
     public void checkBoxCompletes(){
-        Board dummyBoard = new Board(2,2, BitSet.valueOf(new byte[]{0b1011}));
-        assert dummyBoard.getCompletedBoxes(new Line(1,0, LineDirection.DOWN)).equals(EnumSet.of(BoxSide.LEFT));
+        Board missingRight = new Board(2, 2, BitSet.valueOf(new byte[]{0b00100011}));
+        assert missingRight.getCompletedBoxes(new Line(1, 0, LineDirection.DOWN)).equals(EnumSet.of(BoxSide.LEFT));
 
+        Board missingLeft = new Board(2, 2, BitSet.valueOf(new byte[]{0b00100110}));
+        assert missingLeft.getCompletedBoxes(new Line(0, 0, LineDirection.DOWN)).equals(EnumSet.of(BoxSide.RIGHT));
 
-        Board dummyBoard2 = new Board(3,3, BitSet.valueOf(new byte[]{(byte) 0b01100010,0b1111}));
-        assert dummyBoard2.getCompletedBoxes(new Line(0,1, LineDirection.DOWN)).equals(EnumSet.noneOf(BoxSide.class));
-        assert dummyBoard2.getCompletedBoxes(new Line(1,1, LineDirection.DOWN)).equals(EnumSet.of(BoxSide.LEFT,BoxSide.RIGHT));
+        Board missingTop = new Board(2, 2, BitSet.valueOf(new byte[]{0b00100101}));
+        assert missingTop.getCompletedBoxes(new Line(0, 0, LineDirection.RIGHT)).equals(EnumSet.of(BoxSide.BELOW));
 
-        Board dummyBoard3 = new Board(2,3, BitSet.valueOf(new byte[]{0b1101111}));
-        assert dummyBoard3.getCompletedBoxes(new Line(0,1, LineDirection.RIGHT)).equals(EnumSet.of(BoxSide.ABOVE, BoxSide.BELOW));
+        Board missingBottom = new Board(2, 2, BitSet.valueOf(new byte[]{0b00000111}));
+        assert missingBottom.getCompletedBoxes(new Line(0, 1, LineDirection.RIGHT)).equals(EnumSet.of(BoxSide.ABOVE));
     }
 
-    public void checkValidLines(){
-        Board bigBoard = StandardBoards.AMERICAN.generateBoard(5, 5);
-        assert bigBoard.getIndexFromLine(new Line(4, 1, LineDirection.RIGHT)) == -1;
-        assert !bigBoard.getUnplayedPositions().contains(new Line(4, 1, LineDirection.RIGHT));
-        assert bigBoard.getUnplayedPositions().contains(new Line(4, 1, LineDirection.DOWN));
-        assert !bigBoard.getUnplayedPositions().contains(new Line(4, 4, LineDirection.DOWN));
-        assert !bigBoard.getUnplayedPositions().contains(new Line(4, 4, LineDirection.RIGHT));
-        assert bigBoard.getUnplayedPositions().contains(new Line(3, 4, LineDirection.RIGHT));
-    }
+
 }

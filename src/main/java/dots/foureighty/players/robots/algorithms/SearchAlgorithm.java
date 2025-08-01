@@ -2,6 +2,9 @@ package dots.foureighty.players.robots.algorithms;
 
 import dots.foureighty.util.Pair;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+
 public abstract class SearchAlgorithm<NodeType, TransitionType> {
     protected abstract class NeighborGenerator {
         /***
@@ -9,7 +12,7 @@ public abstract class SearchAlgorithm<NodeType, TransitionType> {
          * @param input Node to generate from.
          * @return List of neighbors, and the input required to transition to the state.
          */
-        protected abstract Pair<NodeType, TransitionType>[] getNeighbors(NodeType input);
+        protected abstract Iterator<Pair<NodeType, TransitionType>> getNeighbors(NodeType input);
     }
 
     protected abstract class Evaluator {
@@ -18,7 +21,7 @@ public abstract class SearchAlgorithm<NodeType, TransitionType> {
          * @param input Final state to evaluate.
          * @return Metric to determine how good the output is.
          */
-        protected abstract int evaluate(NodeType input);
+        protected abstract float evaluate(NodeType input);
     }
 
     /***
@@ -28,7 +31,7 @@ public abstract class SearchAlgorithm<NodeType, TransitionType> {
      * @param evaluator Function to evaluate leaves
      * @return
      */
-    protected abstract Pair<TransitionType[], Integer> search(NodeType input,
-                                                              NeighborGenerator neighborGenerator,
-                                                              Evaluator evaluator);
+    protected abstract Pair<LinkedList<TransitionType>, Float> search(NodeType input,
+                                                                      NeighborGenerator neighborGenerator,
+                                                                      Evaluator evaluator);
 }

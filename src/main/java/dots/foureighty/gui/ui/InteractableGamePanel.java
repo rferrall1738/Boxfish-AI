@@ -9,10 +9,7 @@ import dots.foureighty.lines.MoveBuilder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Map;
+import java.util.*;
 
 /***
  * JPanel component that receives input from the player and passes the move to the Game instance
@@ -114,8 +111,8 @@ class InteractableGamePanel extends GamePanel {
         repaint();
     }
 
-    public ArrayList<Line> getNewLines() {
-        return new ArrayList<>(Arrays.asList(moveBuilder.getLines()));
+    public LinkedList<Line> getNewLines() {
+        return new LinkedList<>(Arrays.asList(moveBuilder.getLines()));
     }
 
     public void clearQueuedMove() {

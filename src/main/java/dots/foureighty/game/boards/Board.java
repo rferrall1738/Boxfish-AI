@@ -5,20 +5,32 @@ import dots.foureighty.exceptions.UnsupportedBoardSizeException;
 import dots.foureighty.lines.BoxSide;
 import dots.foureighty.lines.Line;
 import dots.foureighty.lines.LineDirection;
+import dots.foureighty.lines.Move;
+import dots.foureighty.util.Pair;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.EnumSet;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Board {
     private final byte xSize;
     private final byte ySize;
     private final BitSet encodedBoard;
+    private final static HashMap<Pair<Byte, Byte>, BitSet> UNPLAYABLE_POSITIONS = new HashMap<>();
 
+    private static BitSet computeUnplayablePositions(byte xSize, byte ySize) {
+        Board referenceBoard = new Board(xSize, ySize);
+        BitSet unplayablePositions = new BitSet((xSize * ySize) << 1);
 
+        for (int i = 0; i < xSize; i++) {
+            unplayablePositions.set(referenceBoard.getIndexFromLine(new Line(i, ySize - 1, LineDirection.DOWN)));
+        }
+        for (int i = 0; i < ySize; i++) {
+            unplayablePositions.set(referenceBoard.getIndexFromLine(new Line(xSize - 1, i, LineDirection.RIGHT)));
+        }
+        UNPLAYABLE_POSITIONS.put(new Pair<>(xSize, ySize), unplayablePositions);
+        return unplayablePositions;
+    }
     /***
      * Creates an empty board.
      * @param xSize number of horizontal dots
@@ -36,7 +48,7 @@ public class Board {
      *              The first bit is a vertical line, the second is a horizontal line. If a line is not possible,
      *              the bit is skipped.
      *              <p>
-     *              1011 may correspond to a 2x2 grid with the top, left, and bottom line filled.
+     *              00100011 may correspond to a 2x2 grid with the top, left, and bottom line filled.
      *              </p>
      * @see Board#Board(int, int)  Board
      * @throws UnsupportedBoardSizeException If the board dimensions are equal to 0 or greater than
@@ -51,11 +63,10 @@ public class Board {
         this.ySize = ySize;
 
         //Remove unused data
-        int bitSetLength = (xSize * ySize << 1) - xSize - ySize;
+        int bitSetLength = (xSize * ySize << 1);
         BitSet mask = new BitSet(bitSetLength);
         mask.set(0, bitSetLength);
         mask.and(encodedBoard);
-
         this.encodedBoard = mask;
     }
 
@@ -87,39 +98,30 @@ public class Board {
         if(line.getX() > xSize - 1 ||  line.getY() > ySize - 1 || line.getX() < 0 || line.getY() < 0) {
             return -1;
         }
-        if(line.getX() == xSize -1 && line.getDirection() == LineDirection.RIGHT ||
-                line.getY() == ySize -1 && line.getDirection() == LineDirection.DOWN) {
-            return -1;
-        }
         //Move down the grid until you reach the correct row.
         // Each row that has been passed has (2x-1) lines. (Each dot can have a line down or to the right,
         // the last dot in the row can only go down)
-        long index = (((long) getXSize() << 1) - 1) * line.getY();
+        int index = (getXSize() << 1) * line.getY();
 
         //Move across the row to the desired column.
         index += ((long) line.getX() << 1);
-        if (line.getY() + 1 == getYSize()) {
-            index -= line.getX(); //Last row does not have any vertical lines.
-        }else if (line.getDirection() == LineDirection.RIGHT) {
-            index += 1; //First bit is down. Second is right.
+        if (line.getDirection() == LineDirection.RIGHT) {
+            index += 1;
         }
-        return (int) index;
+        return index;
     }
-
     /***
      * Convert an index to a line object
      * @param index index of the bit in the bitset
      * @return A {@link Line} object representation of the index
      */
     public Line getLineFromIndex(int index) {
-        if (index < 0 || index > 2 * getYSize() * getXSize() - getXSize() - getYSize()) {
+        if (index < 0 || index >= 2 * getYSize() * getXSize()) {
             return null;
         }
-        int row = index / (2 * getXSize() -  1);
-        int col = index % (2 * getXSize() -  1);
-        if (row + 1 == getYSize()) {
-            return new Line(col,row, LineDirection.RIGHT);
-        }
+        int row = index / (2 * getXSize());
+        int col = index % (2 * getXSize());
+
         LineDirection direction = col % 2 == 1 ? LineDirection.RIGHT : LineDirection.DOWN;
         return  new Line(col / 2, row, direction);
 
@@ -135,29 +137,29 @@ public class Board {
 
     /***
      * Get the boxes that are completed when playing a line.
-     * @param line The line that is played
+     * @param index Index of the line to be played
      * @return The directions where a box is completed
      * @see BoxSide
      * @see Board#getCompletedBoxes(int)
      * @see Board#completesBox(Line)
      */
     @NotNull
-    public EnumSet<BoxSide> getCompletedBoxes(Line line) {
+    public EnumSet<BoxSide> getCompletedBoxes(int index) {
         EnumSet<BoxSide> boxes = EnumSet.noneOf(BoxSide.class);
-
-        if (line.getDirection() == LineDirection.RIGHT) {
-            if(completesBoxAbove(line)) {
-                boxes.add(BoxSide.ABOVE);
-            }
-            if (completesBoxBelow(line)) {
-                boxes.add(BoxSide.BELOW);
-            }
-        } else {
-            if (completesBoxRight(line)) {
+        boolean isVertical = index % 2 == 0;
+        if (isVertical) {
+            if (completesBoxRight(index)) {
                 boxes.add(BoxSide.RIGHT);
             }
-            if (completesBoxLeft(line)) {
+            if (completesBoxLeft(index)) {
                 boxes.add(BoxSide.LEFT);
+            }
+        } else {
+            if (completesBoxAbove(index)) {
+                boxes.add(BoxSide.ABOVE);
+            }
+            if (completesBoxBelow(index)) {
+                boxes.add(BoxSide.BELOW);
             }
         }
 
@@ -169,76 +171,74 @@ public class Board {
      * Checks if adding a line completes a box
      * @param line the line to play
      * @return if a box is completed
-     * @see Board#getCompletedBoxes(Line)
+     * @see Board#getCompletedBoxes(int)
      */
     public boolean completesBox(Line line) {
         return !getCompletedBoxes(line).isEmpty();
     }
 
     /***
-     * Get the boxes that are completed when playing a line.
-     * @param indexOfLine The index of the line in the bitset
-     * @return The directions where a box is completed
-     * @see BoxSide
-     * @see Board#getCompletedBoxes(Line)
+     * Checks if adding a line completes a box
+     * @param index the line to play
+     * @return if a box is completed
+     * @see Board#getCompletedBoxes(int)
      */
-    public EnumSet<BoxSide> getCompletedBoxes(int indexOfLine) {
-        return getCompletedBoxes(getLineFromIndex(indexOfLine));
+    public boolean completesBox(int index) {
+        return !getCompletedBoxes(index).isEmpty();
     }
 
-    private boolean completesBoxBelow(Line newLine) {
-        if (newLine.getY() + 1 >= getYSize()) return false;
+    /***
+     * Get the boxes that are completed when playing a line.
+     * @param lineToPlay The line to play
+     * @return The directions where a box is completed
+     * @see BoxSide
+     * @see Board#getCompletedBoxes(int)
+     */
+    public EnumSet<BoxSide> getCompletedBoxes(Line lineToPlay) {
+        return getCompletedBoxes(getIndexFromLine(lineToPlay));
+    }
+
+    private boolean completesBoxBelow(int index) {
+        if (index >= ((ySize - 1) * xSize) << 1) return false;
 
         //Box below happens when current dot has a down, dot to the right has a down, and the dot below has a right.
         // Mask: 101...1 where the 0 is the current dot, and the last one is a right move for the dot directly below
+        boolean leftLine = encodedBoard.get(index - 1);
+        boolean rightLine = encodedBoard.get(index + 1);
+        boolean bottomLine = encodedBoard.get(index + (xSize << 1));
 
-        Line lineBelow = new Line(newLine.getX(), newLine.getY() + 1, LineDirection.RIGHT);
-        int indexOfDot = getIndexFromLine(newLine);
-        BitSet mask = new BitSet(encodedBoard.length());
-        mask.set(indexOfDot - 1); //Down line on the dot
-        mask.set(indexOfDot + 1); // Down line on the dot to the right
-        mask.set(getIndexFromLine(lineBelow)); //Right line on the dot below
-
-        mask.andNot(encodedBoard);
-        return mask.cardinality() == 0;
+        return leftLine && rightLine && bottomLine;
     }
-    private boolean completesBoxAbove(Line newLine) {
-        if (newLine.getY() == 0) return false;
 
-        //Box above happens at DOWN and RIGHT for dot directly above point, then Down for the dot to the right of that one
-        // Mask: 111 at the dot directly above the current index
-        Line lineAbove = new Line(newLine.getX(), newLine.getY() - 1, LineDirection.DOWN);
-        int indexOfDotAbove = getIndexFromLine(lineAbove);
-
-        BitSet mask = new BitSet(encodedBoard.length());
-        mask.set(indexOfDotAbove,indexOfDotAbove + 3);
-        mask.andNot(encodedBoard);
-        return mask.cardinality() == 0;
+    private boolean completesBoxAbove(int index) {
+        if (index <= (xSize << 1)) return false;
+        int indexAbove = index - (xSize << 1) - 1;
+        boolean leftSide = encodedBoard.get(indexAbove);
+        boolean topSide = encodedBoard.get(indexAbove + 1);
+        boolean rightSide = encodedBoard.get(indexAbove + 2);
+        return leftSide && topSide && rightSide;
     }
-    private boolean completesBoxLeft(Line newLine) {
-        if (newLine.getX() == 0) return false;
-        //Box left happens when dot to the left is down and right. And the box to the left and down is right.
-        Line dotLeftDown =  new Line(newLine.getX() - 1, newLine.getY() + 1, LineDirection.RIGHT);
-        BitSet mask = new BitSet(encodedBoard.length());
-        int currentDotIndex = getIndexFromLine(newLine);
-        mask.set(currentDotIndex - 2, currentDotIndex); //Dot to the left is down and right
-        mask.set(getIndexFromLine(dotLeftDown)); //Dot down and left is right
-        mask.andNot(encodedBoard);
 
-        return mask.cardinality() == 0;
-    }
-    private boolean completesBoxRight(Line newLine) {
-        if (newLine.getX() +1 >= getXSize()) return false;
+    private boolean completesBoxRight(int index) {
+        if ((index + 1) % (xSize << 1) == 0) return false;
         //Box right happens when current dot is right, dot to the right is down. and dot directly below is right
-        Line dotBelow =  new Line(newLine.getX(), newLine.getY() + 1, LineDirection.RIGHT);
 
-        int indexOfDot = getIndexFromLine(newLine);
-        BitSet mask = new BitSet(encodedBoard.length());
-        mask.set(indexOfDot + 1, indexOfDot + 3);
-        mask.set(getIndexFromLine(dotBelow));
-        mask.andNot(encodedBoard);
 
-        return mask.cardinality() == 0;
+        boolean topSide = encodedBoard.get(index + 1);
+        boolean rightSide = encodedBoard.get(index + 2);
+        boolean bottomSide = encodedBoard.get(index + (xSize << 1) + 1);
+
+        return topSide && rightSide && bottomSide;
+    }
+
+    private boolean completesBoxLeft(int index) {
+        if (index % (xSize << 1) == 0 || index >= ySize * (xSize << 1)) return false;
+        //Box left happens when dot to the left is down and right. And the box to the left and down is right.
+        boolean leftSide = encodedBoard.get(index - 2);
+        boolean topSide = encodedBoard.get(index - 1);
+        boolean bottom = encodedBoard.get(index - 1 + (xSize << 1));
+
+        return leftSide && topSide && bottom;
     }
 
     /***
@@ -277,7 +277,8 @@ public class Board {
      */
     public BitSet getInverseBitSet() {
         BitSet inverseLines = (BitSet) encodedBoard.clone();
-        inverseLines.flip(0, 2 * xSize * ySize - xSize - ySize);
+        inverseLines.flip(0, (xSize * ySize) << 1);
+        inverseLines.andNot(UNPLAYABLE_POSITIONS.getOrDefault(new Pair<>(xSize, ySize), computeUnplayablePositions(xSize, ySize)));
         return inverseLines;
     }
 
@@ -311,6 +312,17 @@ public class Board {
     }
 
     /***
+     * Clones the board and adds the moves to the board
+     * @param move The move to add
+     * @return a new board with the added line
+     */
+    public Board append(Move move) {
+        BitSet newBoard = getLineBitSet();
+        move.getLines().forEach(line -> newBoard.set(getIndexFromLine(line)));
+        return new Board(this.xSize, this.ySize, newBoard);
+    }
+
+    /***
      * Clones the board and removes a line from the board
      * @param line The line to remove
      * @return a new board with the line removed
@@ -328,7 +340,7 @@ public class Board {
         sb.append("xSize=").append(xSize).append(", ySize=").append(ySize);
         sb.append("\n");
         for (int i = 0; i < 2 * getYSize() - 1; i++) {
-            for (int j = 0; j < 2 *getXSize() - 1; j++) {
+            for (int j = 0; j < 2 * getXSize() - 1; j++) {
                 if(i % 2 == 0){
                     if(j % 2 == 0) sb.append("*");
                     else if (containsLine(new Line((j -1) / 2,i / 2,LineDirection.RIGHT))) sb.append("-");

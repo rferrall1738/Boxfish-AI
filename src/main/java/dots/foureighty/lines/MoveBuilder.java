@@ -5,7 +5,7 @@ import dots.foureighty.exceptions.MissingExtraMoveException;
 import dots.foureighty.game.boards.Board;
 
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 
@@ -27,7 +27,7 @@ public class MoveBuilder {
         if (!isComplete()) {
             throw new MissingExtraMoveException();
         }
-        return new Move(new ArrayList<>(moves));
+        return new Move(new LinkedList<>(moves));
     }
 
     public void addLine(Line line) {
@@ -55,6 +55,10 @@ public class MoveBuilder {
 
     public boolean isEmpty() {
         return moves.isEmpty();
+    }
+
+    public void addAll(Collection<Line> lines) {
+        lines.forEach(this::addLine);
     }
 
     public boolean canPlay(Line line) {

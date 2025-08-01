@@ -25,21 +25,21 @@ public class MinimaxTest {
     }
 
     private void singleNodeSearch() {
-        assert MINIMAX_SEARCH.search(SINGLE_NODE).equals(new Pair<>(null, 1));
-        assert !MINIMAX_SEARCH.search(SINGLE_NODE).equals(new Pair<>(null, 2));
+        assert MINIMAX_SEARCH.search(SINGLE_NODE).equals(new Pair<>(null, 1.0f));
+        assert !MINIMAX_SEARCH.search(SINGLE_NODE).equals(new Pair<>(null, 2.0f));
 
-        Pair<TreeSide[], Integer> big = MINIMAX_SEARCH.search(BIG_TREE);
+        Pair<TreeSide[], Float> big = MINIMAX_SEARCH.search(BIG_TREE);
     }
 
     private void singleBranchSearch() {
-        Pair<TreeSide[], Integer> single = MINIMAX_SEARCH.search(SINGLE_BRANCH);
-        assert single.getValue() == 2;
+        Pair<TreeSide[], Float> single = MINIMAX_SEARCH.search(SINGLE_BRANCH);
+        assert single.getValue() == 2.0f;
         assert Arrays.equals(single.getKey(), new TreeSide[]{TreeSide.RIGHT});
     }
 
     private void treeSearch() {
-        Pair<TreeSide[], Integer> single = MINIMAX_SEARCH.search(BIG_TREE);
-        assert single.getValue() == 3;
+        Pair<TreeSide[], Float> single = MINIMAX_SEARCH.search(BIG_TREE);
+        assert single.getValue() == 3.0f;
         assert Arrays.equals(single.getKey(), new TreeSide[]{TreeSide.LEFT, TreeSide.RIGHT});
     }
 }

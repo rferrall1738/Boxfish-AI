@@ -8,10 +8,38 @@ import dots.foureighty.lines.packages.MovePackage;
 import javax.swing.*;
 import java.awt.*;
 
-public class LocalHumanPlayer extends Player {
+public class LocalHumanPlayer implements Player {
+    private final String name;
+    private Color color;
     public LocalHumanPlayer(String name, Color color) {
-        super(name, color);
+        this.name = name;
+        this.color = color;
     }
+
+    /**
+     * @return
+     */
+    @Override
+    public Color getColor() {
+        return color;
+    }
+
+    /**
+     * @param newColor
+     */
+    @Override
+    public void setColor(final Color newColor) {
+        this.color = newColor == null ? newColor : new Color(newColor.getRGB() | 0x07);
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public String getName() {
+        return name;
+    }
+
 
     @Override
     public Move getMove(GameSnapshot gameState) {

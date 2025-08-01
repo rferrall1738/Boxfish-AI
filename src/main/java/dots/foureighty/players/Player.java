@@ -5,32 +5,16 @@ import dots.foureighty.lines.Move;
 
 import java.awt.*;
 
-public abstract class Player {
-    private Color playerColor;
-    private String playerName;
+public interface Player {
 
-    public Player(String name, Color color) {
-        this.playerName = name;
-        this.playerColor = color;
-    }
 
-    public Color getColor() {
-        return playerColor;
-    }
+    Color getColor();
 
-    public void setColor(Color color) {
-        this.playerColor = color == null ? color : new Color(color.getRGB() | 0x07);
-    }
+    void setColor(Color color);
 
-    public String getName() {
-        return playerName;
-    }
+    String getName();
 
-    public void setName(String name) {
-        this.playerName = name;
-    }
-
-    public abstract Move getMove(GameSnapshot gameState);
+    Move getMove(GameSnapshot gameState);
 
 
 }

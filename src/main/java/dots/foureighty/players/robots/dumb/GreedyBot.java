@@ -1,4 +1,4 @@
-package dots.foureighty.players.robots;
+package dots.foureighty.players.robots.dumb;
 
 import dots.foureighty.game.GameSnapshot;
 import dots.foureighty.game.boards.Board;
@@ -9,9 +9,25 @@ import dots.foureighty.players.Player;
 
 import java.awt.*;
 
-public class GreedyBot extends Player {
+public class GreedyBot implements Player {
+    private Color color = Color.GREEN;
+    private final RandomBot randomBot = new RandomBot();
     public GreedyBot() {
-        super("Greedy Bot", Color.GREEN);
+    }
+
+    @Override
+    public Color getColor() {
+        return color;
+    }
+
+    @Override
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    @Override
+    public String getName() {
+        return "GreedyBot";
     }
 
     @Override
@@ -24,16 +40,18 @@ public class GreedyBot extends Player {
         while (!moveBuilder.isComplete()) {
             Line foundLine = searchForBox(moveBuilder.getCurrentBoard());
             if (foundLine == null) {
-                foundLine = moveBuilder.getCurrentBoard().getUnplayedPositions().get(0);
+                //Play a random line if there is nothing to take.
+                moveBuilder.addAll(randomBot.randomMove(moveBuilder.getCurrentBoard()).getLines());
+            } else {
+                moveBuilder.addLine(foundLine);
             }
-            moveBuilder.addLine(foundLine);
         }
         return moveBuilder.build();
     }
 
     /***
      * Searches for boxes in the board
-     * @param board current baord state
+     * @param board current board state
      * @return The first box it finds. Null if none is found.
      */
     private Line searchForBox(Board board) {

@@ -1,16 +1,21 @@
 package dots.foureighty.lines;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 
 public class Move {
-    private final ArrayList<Line> lines;
+    private final LinkedList<Line> lines;
 
-    public Move(ArrayList<Line> lines) {
+    public Move(LinkedList<Line> lines) {
         this.lines = lines;
     }
 
-    public ArrayList<Line> getLines() {
+    public LinkedList<Line> getLines() {
         return lines;
     }
 
+    @Override
+    public String toString() {
+        return "Move [lines=" + Arrays.toString(lines.toArray()) + "]";
+    }
 }

@@ -6,6 +6,7 @@ import dots.foureighty.game.boards.StandardBoards;
 import dots.foureighty.listeners.GameUpdateListener;
 import dots.foureighty.players.LocalHumanPlayer;
 import dots.foureighty.players.Player;
+import dots.foureighty.util.ColorUtils;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -160,17 +161,17 @@ public class GameFactory {
         } else {
             if (player1.getColor() == null || player2.getColor() == null) {
                 if (player1.getColor() != null) {
-                    player2.setColor(invertColor(player1.getColor()));
+                    player2.setColor(ColorUtils.invertColor(player1.getColor()));
                 } else {
-                    player1.setColor(invertColor(player2.getColor()));
+                    player1.setColor(ColorUtils.invertColor(player2.getColor()));
                 }
             }
         }
 
         // If the colors are similar to each other, make player2 use the inverse of player1's color
-        if (computeColorSimilarity(player1.getColor(), player2.getColor()) < 0.2) {
-            if (computeColorSimilarity(player1.getColor(), invertColor(player2.getColor())) > 0.2) {
-                player2.setColor(invertColor(player1.getColor()));
+        if (ColorUtils.computeColorSimilarity(player1.getColor(), player2.getColor()) < 0.2) {
+            if (ColorUtils.computeColorSimilarity(player1.getColor(), ColorUtils.invertColor(player2.getColor())) > 0.2) {
+                player2.setColor(ColorUtils.invertColor(player1.getColor()));
             }
         }
 
@@ -185,21 +186,5 @@ public class GameFactory {
     }
 
 
-    private Color invertColor(Color color) {
-        return new Color(~color.getRGB() | 0x07);
-    }
 
-    private double computeColorSimilarity(Color color1, Color color2) {
-        float[] color1RGB = color1.getRGBComponents(null);
-        float[] color2RGB = color2.getRGBComponents(null);
-        return Math.acos(dotProduct(color1RGB, color2RGB) / (vectorLength(color1RGB) * vectorLength(color2RGB)));
-    }
-
-    private double dotProduct(float[] a, float[] b) {
-        return (double) a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
-    }
-
-    private double vectorLength(float[] vector) {
-        return Math.sqrt(dotProduct(vector, vector));
-    }
 }

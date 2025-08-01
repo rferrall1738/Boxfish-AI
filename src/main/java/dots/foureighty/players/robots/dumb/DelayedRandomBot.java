@@ -1,4 +1,4 @@
-package dots.foureighty.players.robots;
+package dots.foureighty.players.robots.dumb;
 
 import dots.foureighty.game.GameSnapshot;
 import dots.foureighty.lines.packages.MovePackage;
@@ -12,10 +12,10 @@ import java.awt.*;
 public class DelayedRandomBot extends TimedPlayer {
     private final int delay;
     private final RandomBot randomBot = new RandomBot();
+    private Color color = Color.PINK;
 
 
     public DelayedRandomBot(int delay) {
-        super("Delayed Random Bot", Color.ORANGE);
         this.delay = delay;
     }
 
@@ -29,5 +29,29 @@ public class DelayedRandomBot extends TimedPlayer {
     @Override
     protected void searchForBestMove(GameSnapshot gameState, MovePackage bestMove) {
         bestMove.setMove(randomBot.getMove(gameState));
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public Color getColor() {
+        return color;
+    }
+
+    /**
+     * @param color
+     */
+    @Override
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public String getName() {
+        return "DelayedRandomBot";
     }
 }
