@@ -8,6 +8,7 @@ import algorithms.minimax.BinaryTreeMinimaxSearch;
 import dots.foureighty.util.Pair;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 
 public class MinimaxTest {
 
@@ -25,21 +26,19 @@ public class MinimaxTest {
     }
 
     private void singleNodeSearch() {
-        assert MINIMAX_SEARCH.search(SINGLE_NODE).equals(new Pair<>(null, 1.0f));
-        assert !MINIMAX_SEARCH.search(SINGLE_NODE).equals(new Pair<>(null, 2.0f));
-
-        Pair<TreeSide[], Float> big = MINIMAX_SEARCH.search(BIG_TREE);
+        assert MINIMAX_SEARCH.search(SINGLE_NODE).equals(new Pair<>(new LinkedList(), 1.0f));
+        assert !MINIMAX_SEARCH.search(SINGLE_NODE).equals(new Pair<>(new LinkedList(), 2.0f));
     }
 
     private void singleBranchSearch() {
-        Pair<TreeSide[], Float> single = MINIMAX_SEARCH.search(SINGLE_BRANCH);
+        Pair<LinkedList<TreeSide>, Float> single = MINIMAX_SEARCH.search(SINGLE_BRANCH);
         assert single.getValue() == 2.0f;
-        assert Arrays.equals(single.getKey(), new TreeSide[]{TreeSide.RIGHT});
+        assert Arrays.equals(single.getKey().toArray(), new TreeSide[]{TreeSide.RIGHT});
     }
 
     private void treeSearch() {
-        Pair<TreeSide[], Float> single = MINIMAX_SEARCH.search(BIG_TREE);
+        Pair<LinkedList<TreeSide>, Float> single = MINIMAX_SEARCH.search(BIG_TREE);
         assert single.getValue() == 3.0f;
-        assert Arrays.equals(single.getKey(), new TreeSide[]{TreeSide.LEFT, TreeSide.RIGHT});
+        assert Arrays.equals(single.getKey().toArray(), new TreeSide[]{TreeSide.LEFT, TreeSide.RIGHT});
     }
 }
