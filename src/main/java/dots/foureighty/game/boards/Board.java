@@ -1,6 +1,5 @@
 package dots.foureighty.game.boards;
 
-import com.sun.istack.internal.NotNull;
 import dots.foureighty.exceptions.UnsupportedBoardSizeException;
 import dots.foureighty.lines.BoxSide;
 import dots.foureighty.lines.Line;
@@ -9,6 +8,8 @@ import dots.foureighty.lines.Move;
 import dots.foureighty.util.Pair;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -143,7 +144,7 @@ public class Board {
      * @see Board#getCompletedBoxes(int)
      * @see Board#completesBox(Line)
      */
-    @NotNull
+
     public EnumSet<BoxSide> getCompletedBoxes(int index) {
         EnumSet<BoxSide> boxes = EnumSet.noneOf(BoxSide.class);
         boolean isVertical = index % 2 == 0;
@@ -354,5 +355,34 @@ public class Board {
             sb.append("\n");
         }
         return sb.toString();
+    }
+
+    /**
+     *getter for boxes on board
+     * @return list of all current boxes on board, the point is top left of box
+     */
+    public List<Point> getBoxes() {
+        List<Point> boxes = new ArrayList<>();
+        for (int y = 0; y < ySize; y++) {
+            for (int x = 0; x < xSize; x++) {
+                boxes.add(new Point(x,y));
+            }
+        }
+        return boxes;
+    }
+
+    /**
+     * Lines that can make a box
+     * @param box
+     * @return a list with the lines that form a box
+     */
+    public List<Line> getBoxesLines(Point box){
+        int x = box.x;
+        int y = box.y;
+        return Arrays.asList(new Line(x, y, LineDirection.RIGHT),
+                new Line(x, y, LineDirection.DOWN),
+                new Line(x + 1, y, LineDirection.DOWN),
+                new Line(x, y + 1, LineDirection.RIGHT)
+        );
     }
 }

@@ -12,14 +12,17 @@ import dots.foureighty.util.ColorUtils;
 import dots.foureighty.util.Pair;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 
 public class MinimaxBot extends MinimaxSearchAlgorithm<MinimaxBot.MinimaxState, Move> implements Player {
     private final int depth;
     private Color color = Color.ORANGE;
     private final Heuristic<MinimaxState>[] heuristics;
+
 
     public MinimaxBot(int depth, Heuristic<MinimaxState>... heuristics) {
         this.depth = depth;
@@ -44,15 +47,15 @@ public class MinimaxBot extends MinimaxSearchAlgorithm<MinimaxBot.MinimaxState, 
     private final Evaluator stateEvaluator = new Evaluator() {
 
         /***
-         * Evaluator for a possition
+         * Evaluator for a position
          * @param input Final state to evaluate.
          * @return an estimate of this player's score minus the opponent's score.
          */
         @Override
-        protected float evaluate(MinimaxState input) {
+        public float evaluate(MinimaxState input) {
             float score = input.getSelfScore() - input.getOpponentScore();
             for (Heuristic<MinimaxState> heuristic : heuristics) {
-                score += heuristic.evaluate(input);
+                score += 50 * heuristic.evaluate(input);
             }
             return score;
         }
@@ -62,27 +65,36 @@ public class MinimaxBot extends MinimaxSearchAlgorithm<MinimaxBot.MinimaxState, 
     private final NeighborGenerator neighborGenerator = new NeighborGenerator() {
         @Override
         protected Iterator<Pair<MinimaxState, Move>> getNeighbors(MinimaxState input) {
+
             final MoveIterator moveIterator = new MoveIterator(input.getBoard());
-            return new Iterator<Pair<MinimaxState, Move>>() {
+            List<Pair<MinimaxState, Move>> neighbors = new ArrayList<>();
 
-                @Override
-                public boolean hasNext() {
-                    return moveIterator.hasNext();
-                }
+            while (moveIterator.hasNext()) {
+                Move nextMove = moveIterator.next();
+                MinimaxState nextState = input.withMove(nextMove);
+                neighbors.add(new Pair<>(nextState,nextMove));
+            }
 
-                @Override
-                public Pair<MinimaxState, Move> next() {
-                    Move nextMove = moveIterator.next();
-                    return new Pair<>(input.withMove(nextMove), nextMove);
-                }
-            };
+            neighbors.sort((a , b) ->{
+                float evalA = stateEvaluator.evaluate(a.getKey());
+                float evalB = stateEvaluator.evaluate(b.getKey());
+                return input.maximizing ? Float.compare(evalB, evalA) : Float.compare(evalA, evalB);
+            });
+
+            return neighbors.iterator();
         }
     };
 
     @Override
     public Move getMove(GameSnapshot gameState) {
         MinimaxState initialState = new MinimaxState(gameState.getBoard()); //TODO
-        Pair<LinkedList<Move>, Float> result = search(initialState, neighborGenerator, stateEvaluator, depth, true);
+
+        nodesVisited = 0;
+        nodesPruned = 0;
+        Pair<LinkedList<Move>, Float> result = search(initialState, neighborGenerator, stateEvaluator, depth, true, -Float.MAX_VALUE, Float.MAX_VALUE);
+
+        System.out.println("Nodes visited: " + getNodesVisited());
+        System.out.println("Nodes pruned: " + getNodesPruned());
 
         return result.getKey().getFirst();
     }
@@ -111,6 +123,8 @@ public class MinimaxBot extends MinimaxSearchAlgorithm<MinimaxBot.MinimaxState, 
         public int getSelfScore() {
             return selfScore;
         }
+
+        public boolean isMaximizing() {return maximizing;}
 
         public int getOpponentScore() {
             return opponentScore;

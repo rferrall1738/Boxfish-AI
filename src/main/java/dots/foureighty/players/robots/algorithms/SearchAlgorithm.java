@@ -15,13 +15,13 @@ public abstract class SearchAlgorithm<NodeType, TransitionType> {
         protected abstract Iterator<Pair<NodeType, TransitionType>> getNeighbors(NodeType input);
     }
 
-    protected abstract class Evaluator {
+    public abstract class Evaluator {
         /***
          * When given a final state, evaluates how good the output is
          * @param input Final state to evaluate.
          * @return Metric to determine how good the output is.
          */
-        protected abstract float evaluate(NodeType input);
+        public abstract float evaluate(NodeType input);
     }
 
     /***
