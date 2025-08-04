@@ -8,7 +8,7 @@ import java.awt.*;
 import java.util.List;
 
 
-public class GreedyCompleteBox implements Heuristic<MinimaxState> {
+public class ChainHeuristic implements Heuristic<MinimaxState> {
 
     @Override
     public float evaluate(MinimaxState state) {
@@ -23,11 +23,11 @@ public class GreedyCompleteBox implements Heuristic<MinimaxState> {
                     filledLines++;
                 }
             }
-            if (filledLines == 3 && state.isMaximizing()) {
-                score += 100f;
-            }
             if (filledLines == 2 && !state.isMaximizing()) {
-                score -= 100f;
+                score -= -50f;
+            }
+            if (filledLines == 3) {
+                score += 100f;
             }
         }
         return score;

@@ -1,5 +1,3 @@
-package algorithms;
-
 import algorithms.binarytree.BinaryTreeBranch;
 import algorithms.binarytree.BinaryTreeNode;
 import algorithms.binarytree.BinaryTreeValue;
