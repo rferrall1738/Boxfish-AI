@@ -1,13 +1,14 @@
 package dots.foureighty.players.robots.heuristics;
 
-import dots.foureighty.players.robots.Heuristic;
-import dots.foureighty.players.robots.searchbots.minimax.MinimaxBot.MinimaxState;
 import dots.foureighty.lines.Line;
-import java.awt.Point;
+import dots.foureighty.players.robots.Heuristic;
+import dots.foureighty.players.robots.searchbots.minimax.MinimaxState;
+
+import java.awt.*;
 import java.util.List;
 
 
-public class chainHeuristic implements Heuristic<MinimaxState> {
+public class ChainHeuristic implements Heuristic<MinimaxState> {
 
     @Override
     public float evaluate(MinimaxState state) {
@@ -22,13 +23,13 @@ public class chainHeuristic implements Heuristic<MinimaxState> {
                     filledLines++;
                 }
             }
-                if (filledLines == 2 && !state.isMaximizing()) {
-                    score -= -50f;
-                }
-                if (filledLines == 3) {
-                    score += 100f;
-                }
+            if (filledLines == 2 && !state.isMaximizing()) {
+                score -= -50f;
             }
-            return score;
+            if (filledLines == 3) {
+                score += 100f;
+            }
         }
+        return score;
     }
+}

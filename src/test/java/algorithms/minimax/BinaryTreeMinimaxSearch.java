@@ -36,6 +36,6 @@ public class BinaryTreeMinimaxSearch extends MinimaxSearchAlgorithm<BinaryTreeNo
     };
 
     public Pair<LinkedList<TreeSide>, Float> search(BinaryTreeNode input) {
-        return super.search(input, generator, evaluator, -1, true, -Float.MAX_VALUE, Float.MAX_VALUE);
+        return super.search(input, generator, evaluator, -1, true);
     }
 }
