@@ -26,7 +26,7 @@ public class BinaryTreeMinimaxSearch extends MinimaxSearchAlgorithm<BinaryTreeNo
     };
     Evaluator evaluator = new Evaluator() {
         @Override
-        protected float evaluate(BinaryTreeNode input) {
+        public float evaluate(BinaryTreeNode input) {
             if (input instanceof BinaryTreeValue) {
                 BinaryTreeValue value = (BinaryTreeValue) input;
                 return value.getValue();

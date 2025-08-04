@@ -10,6 +10,7 @@ import dots.foureighty.util.Pair;
 
 import java.awt.*;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class Board {
@@ -354,5 +355,36 @@ public class Board {
             sb.append("\n");
         }
         return sb.toString();
+    }
+
+    /**
+     * getter for boxes on board
+     *
+     * @return list of all current boxes on board, the point is top left of box
+     */
+    public List<Point> getBoxes() {
+        List<Point> boxes = new LinkedList<>();
+        for (int y = 0; y < ySize; y++) {
+            for (int x = 0; x < xSize; x++) {
+                boxes.add(new Point(x, y));
+            }
+        }
+        return boxes;
+    }
+
+    /**
+     * Lines that can make a box
+     *
+     * @param box
+     * @return a list with the lines that form a box
+     */
+    public List<Line> getBoxesLines(Point box) {
+        int x = box.x;
+        int y = box.y;
+        return Arrays.asList(new Line(x, y, LineDirection.RIGHT),
+                new Line(x, y, LineDirection.DOWN),
+                new Line(x + 1, y, LineDirection.DOWN),
+                new Line(x, y + 1, LineDirection.RIGHT)
+        );
     }
 }

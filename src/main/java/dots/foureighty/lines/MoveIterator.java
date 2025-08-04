@@ -3,7 +3,10 @@ package dots.foureighty.lines;
 import dots.foureighty.game.boards.Board;
 import dots.foureighty.util.Pair;
 
-import java.util.*;
+import java.util.BitSet;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 public class MoveIterator implements Iterator<Move> {
     private final Board board;
@@ -53,4 +56,22 @@ public class MoveIterator implements Iterator<Move> {
         }
     }
 
+    public boolean hasChildBranch() {
+        return !queuedIterators.isEmpty();
+    }
+
+    /***
+     * Skip moves in the deepest branch
+     */
+    public void skipBranch() {
+        if (queuedIterators.isEmpty()) {
+            return;
+        }
+        MoveIterator childIterator = queuedIterators.peekFirst().getValue();
+        if (childIterator.hasChildBranch()) {
+            childIterator.skipBranch();
+            return;
+        }
+        queuedIterators.removeFirst();
+    }
 }
