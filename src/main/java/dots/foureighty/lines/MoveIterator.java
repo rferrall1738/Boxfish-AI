@@ -27,6 +27,8 @@ public class MoveIterator implements Iterator<Move> {
         return unplayedBitSet.nextSetBit(index + 1) != -1;
     }
 
+    //TODO: Check for duplicate moves. Move iterator should not return equal moves. (Line A, Line B, Line C)
+    // is the same as (Line B, Line A, Line C)
     @Override
     public Move next() {
         if (queuedIterators.isEmpty()) {
