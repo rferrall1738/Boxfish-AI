@@ -59,9 +59,25 @@ public class GameWatcher extends JFrame implements GameUpdateListener {
 
     private void updatePlayerPanels() {
         player1Name.setText(game.getPlayer1Name());
+        player1Name.setForeground(game.getPlayer1Color());
         player2Name.setText(game.getPlayer2Name());
+        player2Name.setForeground(game.getPlayer2Color());
         player1Score.setText(game.getPlayer1Boxes().length + "");
         player2Score.setText(game.getPlayer2Boxes().length + "");
+
+        String p1FontFamily = player1Name.getFont().getFamily();
+        int p1FontSize = player1Name.getFont().getSize();
+
+        String p2FontFamily = player2Name.getFont().getFamily();
+        int p2FontSize = player2Name.getFont().getSize();
+
+        if (game.isPlayer1Turn()) {
+            player1Name.setFont(new Font(p1FontFamily, Font.BOLD, p1FontSize));
+            player2Name.setFont(new Font(p2FontFamily, Font.PLAIN, p2FontSize));
+        } else {
+            player1Name.setFont(new Font(p1FontFamily, Font.PLAIN, p1FontSize));
+            player2Name.setFont(new Font(p2FontFamily, Font.BOLD, p2FontSize));
+        }
     }
 
     public void deregister() {
