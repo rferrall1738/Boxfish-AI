@@ -92,7 +92,6 @@ public class StartScreen extends JFrame {
         playerType.addActionListener(e -> {
             String choice = (String) playerType.getSelectedItem();
             boolean isHuman = choice.equals("Human Player");
-            boolean isRandom = choice.equals("Random Bot");
             boolean isAlpha = choice.equals("Alpha-Beta Bot");
             colorPicker.setVisible(isHuman);
             depthSelector.setVisible(isAlpha);
