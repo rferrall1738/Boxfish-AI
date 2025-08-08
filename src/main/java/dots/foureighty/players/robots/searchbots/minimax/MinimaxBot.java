@@ -15,7 +15,7 @@ import java.util.LinkedList;
 
 
 public class MinimaxBot extends MinimaxSearchAlgorithm<MinimaxState, Move> implements Player {
-    private final int depth;
+    protected final int depth;
     private Color color = Color.ORANGE;
     private final Heuristic<MinimaxState>[] heuristics;
 
@@ -39,7 +39,7 @@ public class MinimaxBot extends MinimaxSearchAlgorithm<MinimaxState, Move> imple
         return "MinimaxBot (" + depth + ")";
     }
 
-    private final Evaluator stateEvaluator = new Evaluator() {
+    protected final Evaluator stateEvaluator = new Evaluator() {
 
         /***
          * Evaluator for a position
@@ -57,7 +57,7 @@ public class MinimaxBot extends MinimaxSearchAlgorithm<MinimaxState, Move> imple
     };
 
 
-    private final NeighborGenerator neighborGenerator = new NeighborGenerator() {
+    protected final NeighborGenerator neighborGenerator = new NeighborGenerator() {
         @Override
         protected Iterator<Pair<MinimaxState, Move>> getNeighbors(MinimaxState input) {
             final MoveIterator moveIterator = new MoveIterator(input.getBoard());
