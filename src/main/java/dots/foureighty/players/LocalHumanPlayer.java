@@ -58,8 +58,10 @@ public class LocalHumanPlayer implements Player {
                     }
                 }));
                 inputFrame.add(userInputPanel);
-                inputFrame.setVisible(true);
                 inputFrame.pack();
+                inputFrame.setLocationRelativeTo(null);
+                inputFrame.setVisible(true);
+
 
             }).start();
 
