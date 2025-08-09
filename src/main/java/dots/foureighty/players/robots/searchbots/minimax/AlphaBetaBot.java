@@ -16,7 +16,7 @@ import java.util.NoSuchElementException;
 
 
 public class AlphaBetaBot extends AlphaBetaSearchAlgorithm<MinimaxState, Move> implements Player {
-    private final int depth;
+    protected final int depth;
     private Color color = Color.ORANGE;
     private final Heuristic<MinimaxState>[] heuristics;
 
@@ -41,7 +41,7 @@ public class AlphaBetaBot extends AlphaBetaSearchAlgorithm<MinimaxState, Move> i
         return "AlphaBetaBot (" + depth + ")";
     }
 
-    private final Evaluator stateEvaluator = new Evaluator() {
+    protected final Evaluator stateEvaluator = new Evaluator() {
         @Override
         public float evaluate(MinimaxState input) {
             float score = input.getSelfScore() - input.getOpponentScore();
@@ -53,7 +53,7 @@ public class AlphaBetaBot extends AlphaBetaSearchAlgorithm<MinimaxState, Move> i
     };
 
 
-    private final SkippableNeighborGenerator neighborGenerator = new SkippableNeighborGenerator() {
+    protected final SkippableNeighborGenerator neighborGenerator = new SkippableNeighborGenerator() {
         @Override
         protected SkippableIterator<Pair<MinimaxState, Move>> getNeighbors(MinimaxState input) {
             final MoveIterator moveIterator = new MoveIterator(input.getBoard());

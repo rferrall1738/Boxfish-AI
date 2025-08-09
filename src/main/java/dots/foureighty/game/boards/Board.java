@@ -1,6 +1,6 @@
 package dots.foureighty.game.boards;
 
-import com.sun.istack.internal.NotNull;
+
 import dots.foureighty.exceptions.UnsupportedBoardSizeException;
 import dots.foureighty.lines.BoxSide;
 import dots.foureighty.lines.Line;
@@ -144,7 +144,7 @@ public class Board {
      * @see Board#getCompletedBoxes(int)
      * @see Board#completesBox(Line)
      */
-    @NotNull
+
     public EnumSet<BoxSide> getCompletedBoxes(int index) {
         EnumSet<BoxSide> boxes = EnumSet.noneOf(BoxSide.class);
         boolean isVertical = index % 2 == 0;
@@ -310,6 +310,17 @@ public class Board {
         BitSet newBoard = getLineBitSet();
         newBoard.set(index);
         return new Board(this.xSize,this.ySize,newBoard);
+    }
+
+    /***
+     * Clones the board and adds the line to the board
+     * @param lineIndex The line to add
+     * @return a new board with the added line
+     */
+    public Board append(int lineIndex) {
+        BitSet newBoard = getLineBitSet();
+        newBoard.set(lineIndex);
+        return new Board(this.xSize, this.ySize, newBoard);
     }
 
     /***
