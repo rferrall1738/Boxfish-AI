@@ -313,6 +313,17 @@ public class Board {
     }
 
     /***
+     * Clones the board and adds the line to the board
+     * @param lineIndex The line to add
+     * @return a new board with the added line
+     */
+    public Board append(int lineIndex) {
+        BitSet newBoard = getLineBitSet();
+        newBoard.set(lineIndex);
+        return new Board(this.xSize, this.ySize, newBoard);
+    }
+
+    /***
      * Clones the board and adds the moves to the board
      * @param move The move to add
      * @return a new board with the added line
