@@ -1,5 +1,6 @@
-package dots.foureighty.players.robots.algorithms;
+package dots.foureighty.players.robots.algorithms.minimax;
 
+import dots.foureighty.players.robots.algorithms.SearchAlgorithm;
 import dots.foureighty.util.Pair;
 
 import java.util.Iterator;

@@ -1,4 +1,4 @@
-package dots.foureighty.players.robots.algorithms;
+package dots.foureighty.players.robots.algorithms.minimax;
 
 import dots.foureighty.util.Pair;
 import dots.foureighty.util.SkippableIterator;
@@ -10,7 +10,7 @@ public class AlphaBetaSearchAlgorithm<InputType, TransitionType> extends Minimax
 
     public abstract class SkippableNeighborGenerator extends NeighborGenerator {
         @Override
-        protected abstract SkippableIterator<Pair<InputType, TransitionType>> getNeighbors(InputType input);
+        public abstract SkippableIterator<Pair<InputType, TransitionType>> getNeighbors(InputType input);
     }
 
     @Override

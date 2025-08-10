@@ -4,7 +4,7 @@ import algorithms.binarytree.BinaryTreeBranch;
 import algorithms.binarytree.BinaryTreeNode;
 import algorithms.binarytree.BinaryTreeValue;
 import algorithms.binarytree.TreeSide;
-import dots.foureighty.players.robots.algorithms.MinimaxSearchAlgorithm;
+import dots.foureighty.players.robots.algorithms.minimax.MinimaxSearchAlgorithm;
 import dots.foureighty.util.Pair;
 
 import java.util.Iterator;
@@ -14,7 +14,7 @@ public class BinaryTreeMinimaxSearch extends MinimaxSearchAlgorithm<BinaryTreeNo
 
     NeighborGenerator generator = new NeighborGenerator() {
         @Override
-        protected Iterator<Pair<BinaryTreeNode, TreeSide>> getNeighbors(BinaryTreeNode input) {
+        public Iterator<Pair<BinaryTreeNode, TreeSide>> getNeighbors(BinaryTreeNode input) {
             LinkedList<Pair<BinaryTreeNode, TreeSide>> neighbors = new LinkedList<>();
             if (input instanceof BinaryTreeBranch) {
                 BinaryTreeBranch branch = (BinaryTreeBranch) input;

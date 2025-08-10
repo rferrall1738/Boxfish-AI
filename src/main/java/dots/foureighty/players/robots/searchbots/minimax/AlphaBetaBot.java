@@ -5,7 +5,7 @@ import dots.foureighty.lines.Move;
 import dots.foureighty.lines.MoveIterator;
 import dots.foureighty.players.Player;
 import dots.foureighty.players.robots.Heuristic;
-import dots.foureighty.players.robots.algorithms.AlphaBetaSearchAlgorithm;
+import dots.foureighty.players.robots.algorithms.minimax.AlphaBetaSearchAlgorithm;
 import dots.foureighty.util.ColorUtils;
 import dots.foureighty.util.Pair;
 import dots.foureighty.util.SkippableIterator;
@@ -55,7 +55,7 @@ public class AlphaBetaBot extends AlphaBetaSearchAlgorithm<MinimaxState, Move> i
 
     protected final SkippableNeighborGenerator neighborGenerator = new SkippableNeighborGenerator() {
         @Override
-        protected SkippableIterator<Pair<MinimaxState, Move>> getNeighbors(MinimaxState input) {
+        public SkippableIterator<Pair<MinimaxState, Move>> getNeighbors(MinimaxState input) {
             final MoveIterator moveIterator = new MoveIterator(input.getBoard());
             return new SkippableIterator<Pair<MinimaxState, Move>>() {
 

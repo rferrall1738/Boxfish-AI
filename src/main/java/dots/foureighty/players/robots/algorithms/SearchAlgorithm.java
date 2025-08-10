@@ -6,13 +6,13 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 public abstract class SearchAlgorithm<NodeType, TransitionType> {
-    protected abstract class NeighborGenerator {
+    public abstract class NeighborGenerator {
         /***
          * Generate neighbors from a node.
          * @param input Node to generate from.
          * @return List of neighbors, and the input required to transition to the state.
          */
-        protected abstract Iterator<Pair<NodeType, TransitionType>> getNeighbors(NodeType input);
+        public abstract Iterator<Pair<NodeType, TransitionType>> getNeighbors(NodeType input);
     }
 
     public abstract class Evaluator {

@@ -3,72 +3,87 @@ package dots.foureighty.players.robots.searchbots.minimax;
 import dots.foureighty.game.GameSnapshot;
 import dots.foureighty.lines.Move;
 import dots.foureighty.lines.MoveIterator;
+import dots.foureighty.players.Player;
 import dots.foureighty.players.robots.Heuristic;
+import dots.foureighty.players.robots.algorithms.SearchAlgorithm;
+import dots.foureighty.players.robots.algorithms.minimax.ParallelMinimaxSearchAlgorithm;
+import dots.foureighty.util.ColorUtils;
 import dots.foureighty.util.Pair;
 
-import java.util.ArrayList;
+import java.awt.*;
+import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.*;
 
-public class ParallelMaxBot extends MinimaxBot{
-    public ParallelMaxBot(int depth, Heuristic<MinimaxState>... heuristics){
-        super(depth, heuristics);
+public class ParallelMaxBot extends ParallelMinimaxSearchAlgorithm<MinimaxState, Move> implements Player {
+    protected final int depth;
+    private Color color = Color.ORANGE;
+    private final Heuristic<MinimaxState>[] heuristics;
+
+    public ParallelMaxBot(int depth, Heuristic<MinimaxState>... heuristics) {
+        this.depth = depth;
+        this.heuristics = heuristics;
     }
 
     @Override
-    public Move getMove(GameSnapshot gameState){
-        MinimaxState initialState = new MinimaxState(gameState.getBoard());
+    public Color getColor() {
+        return color;
+    }
 
-        final MoveIterator moveIterator = new MoveIterator(initialState.getBoard());
+    @Override
+    public void setColor(Color color) {
+        this.color = ColorUtils.withFullAlpha(color);
+    }
 
-        // creates a list of tasks to be executed by the executor
-        List<Callable<Pair<Move, Float>>> tasks = new ArrayList<>();
+    @Override
+    public String getName() {
+        return "ParallelMinimaxBot (" + depth + ")";
+    }
 
-        //for every move create a task and evaluate
-        while(moveIterator.hasNext()){
-            Move move = moveIterator.next();
+    protected final SearchAlgorithm.Evaluator stateEvaluator = new Evaluator() {
 
-            // creates a task that performs minimax on the child state
-            tasks.add(() -> {
-                MinimaxState childState = initialState.withMove(move);
-                Pair<LinkedList<Move>,Float> result = search(childState, getNeighborGenerator(),getEvaluator(), getDepth() -1, false);
-                return new Pair<>(move, result.getValue());
-            });
-        }
-
-        //create thread pool with all available processors
-        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-        Move bestMove = null;
-        float bestScore = -Float.MAX_VALUE;
-
-        try{
-            List<Future<Pair<Move, Float>>> results = executor.invokeAll(tasks);
-            //chose the result with highest score
-            for(Future<Pair<Move, Float>> future : results){
-                Pair<Move,Float> result = future.get();
-                if(result.getValue() > bestScore){
-                    bestScore = result.getValue();
-                    bestMove = result.getKey();
-                }
+        /***
+         * Evaluator for a position
+         * @param input Final state to evaluate.
+         * @return an estimate of this player's score minus the opponent's score.
+         */
+        @Override
+        public float evaluate(MinimaxState input) {
+            float score = input.getSelfScore() - input.getOpponentScore();
+            for (Heuristic<MinimaxState> heuristic : heuristics) {
+                score += heuristic.evaluate(input);
             }
+            return score;
         }
-        catch (InterruptedException| ExecutionException e){
-            e.printStackTrace();
+    };
+
+
+    protected final SearchAlgorithm.NeighborGenerator neighborGenerator = new NeighborGenerator() {
+        @Override
+        public Iterator<Pair<MinimaxState, Move>> getNeighbors(MinimaxState input) {
+            final MoveIterator moveIterator = new MoveIterator(input.getBoard());
+            return new Iterator<Pair<MinimaxState, Move>>() {
+
+                @Override
+                public boolean hasNext() {
+                    return moveIterator.hasNext();
+                }
+
+                @Override
+                public Pair<MinimaxState, Move> next() {
+                    Move nextMove = moveIterator.next();
+                    return new Pair<>(input.withMove(nextMove), nextMove);
+                }
+            };
         }
-        finally {
-            executor.shutdown();
-        }
-        return bestMove;
-    }
-
-    private int getDepth(){ return super.depth; }
-
-    private Evaluator getEvaluator(){ return super.stateEvaluator;}
-
-    private NeighborGenerator getNeighborGenerator(){ return super.neighborGenerator;}
+    };
 
     @Override
-    public String getName(){return "ParallelMiniMaxBot (" + depth + ")";}
+    public Move getMove(GameSnapshot gameState) {
+        MinimaxState initialState = new MinimaxState(gameState.getBoard());
+        Pair<LinkedList<Move>, Float> result = search(initialState, neighborGenerator, stateEvaluator, depth, true);
+
+        return result.getKey().getFirst();
+    }
+
 
 }
