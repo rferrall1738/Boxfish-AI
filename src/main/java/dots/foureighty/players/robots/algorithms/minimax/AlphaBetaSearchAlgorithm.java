@@ -5,7 +5,7 @@ import dots.foureighty.util.SkippableIterator;
 
 import java.util.LinkedList;
 
-public class AlphaBetaSearchAlgorithm<InputType, TransitionType> extends MinimaxSearchAlgorithm<InputType, TransitionType> {
+public abstract class AlphaBetaSearchAlgorithm<InputType, TransitionType> extends MinimaxSearchAlgorithm<InputType, TransitionType> {
 
 
     public abstract class SkippableNeighborGenerator extends NeighborGenerator {

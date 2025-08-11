@@ -4,9 +4,13 @@ import algorithms.binarytree.BinaryTreeValue;
 import algorithms.binarytree.TreeSide;
 import algorithms.minimax.BinaryTreeMinimaxSearch;
 import dots.foureighty.util.Pair;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.LinkedList;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class MinimaxTest {
 
@@ -17,15 +21,13 @@ public class MinimaxTest {
 
     private static final BinaryTreeMinimaxSearch MINIMAX_SEARCH = new BinaryTreeMinimaxSearch();
 
-    public void runTests() {
-        singleNodeSearch();
-        singleBranchSearch();
-        treeSearch();
-    }
+    @Test
+    public void singleNodeSearch() {
+        Pair<LinkedList<TreeSide>, Float> singleNodeResults = MINIMAX_SEARCH.search(SINGLE_NODE);
 
-    private void singleNodeSearch() {
-        assert MINIMAX_SEARCH.search(SINGLE_NODE).equals(new Pair<>(new LinkedList(), 1.0f));
-        assert !MINIMAX_SEARCH.search(SINGLE_NODE).equals(new Pair<>(new LinkedList(), 2.0f));
+        assertEquals(new Pair<>(new LinkedList(), 1.0f), singleNodeResults);
+        assertNotEquals(new Pair<>(new LinkedList(), 2.0f), singleNodeResults);
+
     }
 
     private void singleBranchSearch() {

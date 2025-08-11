@@ -3,13 +3,11 @@ package dots.foureighty.gui;
 
 import dots.foureighty.game.GameFactory;
 import dots.foureighty.game.boards.StandardBoards;
-import dots.foureighty.gui.GameWatcher;
-import dots.foureighty.gui.StartScreen;
-import dots.foureighty.players.robots.dumb.GreedyBot;
-import dots.foureighty.players.robots.searchbots.minimax.AlphaBetaBot;
 import dots.foureighty.players.LocalHumanPlayer;
-import dots.foureighty.players.robots.dumb.RandomBot;
 import dots.foureighty.players.Player;
+import dots.foureighty.players.robots.dumb.GreedyBot;
+import dots.foureighty.players.robots.dumb.RandomBot;
+import dots.foureighty.players.robots.searchbots.minimax.AlphaBetaBot;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +24,10 @@ public class StartScreen extends JFrame {
     private Color selectedColor1 = Color.RED;
     private Color selectedColor2 = Color.BLUE;
 
-    // Creates a start screen for users to choose bot type for each player
+
+    /***
+     * Creates a start screen for users to choose bot type for each player
+     */
     public StartScreen() {
         setTitle("Dots & Boxes");
         setSize(600, 600);

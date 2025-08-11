@@ -6,7 +6,7 @@ import dots.foureighty.util.Pair;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class MinimaxSearchAlgorithm<InputType, TransitionType> extends SearchAlgorithm<InputType, TransitionType> {
+public abstract class MinimaxSearchAlgorithm<InputType, TransitionType> extends SearchAlgorithm<InputType, TransitionType> {
 
     @Override
     protected final Pair<LinkedList<TransitionType>, Float> search(InputType input, NeighborGenerator neighborGenerator, Evaluator evaluator) {
