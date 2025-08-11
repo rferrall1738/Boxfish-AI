@@ -22,6 +22,7 @@ public class ParallelMaxBot extends MinimaxBot{
 
         final MoveIterator moveIterator = new MoveIterator(initialState.getBoard());
 
+
         // creates a list of tasks to be executed by the executor
         List<Callable<Pair<Move, Float>>> tasks = new ArrayList<>();
 
