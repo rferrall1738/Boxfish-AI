@@ -1,19 +1,21 @@
 package dots.foureighty.players.robots.algorithms.minimax;
 
+import dots.foureighty.players.robots.algorithms.Evaluator;
+import dots.foureighty.players.robots.algorithms.NeighborGenerator;
 import dots.foureighty.players.robots.algorithms.SearchAlgorithm;
 import dots.foureighty.util.Pair;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public abstract class MinimaxSearchAlgorithm<InputType, TransitionType> extends SearchAlgorithm<InputType, TransitionType> {
+public class MinimaxSearchAlgorithm<InputType, TransitionType> extends SearchAlgorithm<InputType, TransitionType> {
 
     @Override
-    protected final Pair<LinkedList<TransitionType>, Float> search(InputType input, NeighborGenerator neighborGenerator, Evaluator evaluator) {
+    protected final Pair<LinkedList<TransitionType>, Float> search(InputType input, NeighborGenerator<InputType, TransitionType> neighborGenerator, Evaluator<InputType> evaluator) {
         return search(input, neighborGenerator, evaluator, -1, true);
     }
 
-    protected Pair<LinkedList<TransitionType>, Float> search(InputType input, NeighborGenerator neighborGenerator, Evaluator evaluator, int depth, boolean maximize) {
+    protected Pair<LinkedList<TransitionType>, Float> search(InputType input, NeighborGenerator<InputType, TransitionType> neighborGenerator, Evaluator<InputType> evaluator, int depth, boolean maximize) {
         Iterator<Pair<InputType, TransitionType>> neighbors = neighborGenerator.getNeighbors(input);
         if (!neighbors.hasNext() || depth == 0) {
             return new Pair<>(new LinkedList<>(), evaluator.evaluate(input));

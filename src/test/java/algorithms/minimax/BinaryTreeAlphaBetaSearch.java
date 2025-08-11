@@ -3,6 +3,7 @@ package algorithms.minimax;
 import algorithms.binarytree.BinaryTreeNode;
 import algorithms.binarytree.BinaryTreeValue;
 import algorithms.binarytree.TreeSide;
+import dots.foureighty.players.robots.algorithms.Evaluator;
 import dots.foureighty.players.robots.algorithms.minimax.AlphaBetaSearchAlgorithm;
 import dots.foureighty.util.Pair;
 import dots.foureighty.util.SkippableIterator;
@@ -19,7 +20,7 @@ public class BinaryTreeAlphaBetaSearch extends AlphaBetaSearchAlgorithm<BinaryTr
         }
     };
 
-    Evaluator evaluator = new Evaluator() {
+    Evaluator evaluator = new Evaluator<BinaryTreeNode>() {
         @Override
         public float evaluate(BinaryTreeNode input) {
             if (input instanceof BinaryTreeValue) {

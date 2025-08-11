@@ -5,6 +5,7 @@ import dots.foureighty.lines.Move;
 import dots.foureighty.lines.MoveIterator;
 import dots.foureighty.players.Player;
 import dots.foureighty.players.robots.Heuristic;
+import dots.foureighty.players.robots.algorithms.Evaluator;
 import dots.foureighty.players.robots.algorithms.minimax.AlphaBetaSearchAlgorithm;
 import dots.foureighty.util.ColorUtils;
 import dots.foureighty.util.Pair;
@@ -41,7 +42,7 @@ public class AlphaBetaBot extends AlphaBetaSearchAlgorithm<MinimaxState, Move> i
         return "AlphaBetaBot (" + depth + ")";
     }
 
-    protected final Evaluator stateEvaluator = new Evaluator() {
+    protected final Evaluator stateEvaluator = new Evaluator<MinimaxState>() {
         @Override
         public float evaluate(MinimaxState input) {
             float score = input.getSelfScore() - input.getOpponentScore();

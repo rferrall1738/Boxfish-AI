@@ -11,6 +11,7 @@
           </option>
           <option name="goals">
             <list>
+              <option value="install" />
               <option value="exec:java" />
               <option value="-Dexec.mainClass=dots.foureighty.Main" />
             </list>

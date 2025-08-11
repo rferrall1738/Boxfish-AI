@@ -1,5 +1,7 @@
 package dots.foureighty.players.robots.algorithms.minimax;
 
+import dots.foureighty.players.robots.algorithms.Evaluator;
+import dots.foureighty.players.robots.algorithms.NeighborGenerator;
 import dots.foureighty.util.Pair;
 import dots.foureighty.util.SkippableIterator;
 
@@ -8,13 +10,13 @@ import java.util.LinkedList;
 public abstract class AlphaBetaSearchAlgorithm<InputType, TransitionType> extends MinimaxSearchAlgorithm<InputType, TransitionType> {
 
 
-    public abstract class SkippableNeighborGenerator extends NeighborGenerator {
+    public abstract class SkippableNeighborGenerator extends NeighborGenerator<InputType, TransitionType> {
         @Override
         public abstract SkippableIterator<Pair<InputType, TransitionType>> getNeighbors(InputType input);
     }
 
     @Override
-    protected Pair<LinkedList<TransitionType>, Float> search(InputType input, NeighborGenerator neighborGenerator, Evaluator evaluator, int depth, boolean maximize) {
+    protected Pair<LinkedList<TransitionType>, Float> search(InputType input, NeighborGenerator<InputType, TransitionType> neighborGenerator, Evaluator<InputType> evaluator, int depth, boolean maximize) {
         return search(input, (SkippableNeighborGenerator) neighborGenerator, evaluator, depth, maximize, -Float.MAX_VALUE, Float.MAX_VALUE);
     }
 

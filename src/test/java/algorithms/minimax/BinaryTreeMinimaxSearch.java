@@ -4,6 +4,8 @@ import algorithms.binarytree.BinaryTreeBranch;
 import algorithms.binarytree.BinaryTreeNode;
 import algorithms.binarytree.BinaryTreeValue;
 import algorithms.binarytree.TreeSide;
+import dots.foureighty.players.robots.algorithms.Evaluator;
+import dots.foureighty.players.robots.algorithms.NeighborGenerator;
 import dots.foureighty.players.robots.algorithms.minimax.MinimaxSearchAlgorithm;
 import dots.foureighty.util.Pair;
 
@@ -12,7 +14,7 @@ import java.util.LinkedList;
 
 public class BinaryTreeMinimaxSearch extends MinimaxSearchAlgorithm<BinaryTreeNode, TreeSide> {
 
-    NeighborGenerator generator = new NeighborGenerator() {
+    NeighborGenerator generator = new NeighborGenerator<BinaryTreeNode, TreeSide>() {
         @Override
         public Iterator<Pair<BinaryTreeNode, TreeSide>> getNeighbors(BinaryTreeNode input) {
             LinkedList<Pair<BinaryTreeNode, TreeSide>> neighbors = new LinkedList<>();
@@ -24,7 +26,7 @@ public class BinaryTreeMinimaxSearch extends MinimaxSearchAlgorithm<BinaryTreeNo
             return neighbors.iterator();
         }
     };
-    Evaluator evaluator = new Evaluator() {
+    Evaluator evaluator = new Evaluator<BinaryTreeNode>() {
         @Override
         public float evaluate(BinaryTreeNode input) {
             if (input instanceof BinaryTreeValue) {
