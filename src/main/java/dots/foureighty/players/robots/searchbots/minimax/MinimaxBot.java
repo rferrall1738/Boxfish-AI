@@ -5,7 +5,9 @@ import dots.foureighty.lines.Move;
 import dots.foureighty.lines.MoveIterator;
 import dots.foureighty.players.Player;
 import dots.foureighty.players.robots.Heuristic;
-import dots.foureighty.players.robots.algorithms.MinimaxSearchAlgorithm;
+import dots.foureighty.players.robots.algorithms.Evaluator;
+import dots.foureighty.players.robots.algorithms.NeighborGenerator;
+import dots.foureighty.players.robots.algorithms.minimax.MinimaxSearchAlgorithm;
 import dots.foureighty.util.ColorUtils;
 import dots.foureighty.util.Pair;
 
@@ -39,7 +41,7 @@ public class MinimaxBot extends MinimaxSearchAlgorithm<MinimaxState, Move> imple
         return "MinimaxBot (" + depth + ")";
     }
 
-    protected final Evaluator stateEvaluator = new Evaluator() {
+    protected final Evaluator stateEvaluator = new Evaluator<MinimaxState>() {
 
         /***
          * Evaluator for a position
@@ -57,9 +59,9 @@ public class MinimaxBot extends MinimaxSearchAlgorithm<MinimaxState, Move> imple
     };
 
 
-    protected final NeighborGenerator neighborGenerator = new NeighborGenerator() {
+    protected final NeighborGenerator neighborGenerator = new NeighborGenerator<MinimaxState, Move>() {
         @Override
-        protected Iterator<Pair<MinimaxState, Move>> getNeighbors(MinimaxState input) {
+        public Iterator<Pair<MinimaxState, Move>> getNeighbors(MinimaxState input) {
             final MoveIterator moveIterator = new MoveIterator(input.getBoard());
             return new Iterator<Pair<MinimaxState, Move>>() {
 
@@ -79,7 +81,7 @@ public class MinimaxBot extends MinimaxSearchAlgorithm<MinimaxState, Move> imple
 
     @Override
     public Move getMove(GameSnapshot gameState) {
-        MinimaxState initialState = new MinimaxState(gameState.getBoard()); //TODO
+        MinimaxState initialState = new MinimaxState(gameState.getBoard());
         Pair<LinkedList<Move>, Float> result = search(initialState, neighborGenerator, stateEvaluator, depth, true);
 
         return result.getKey().getFirst();

@@ -4,9 +4,11 @@ import algorithms.binarytree.BinaryTreeValue;
 import algorithms.binarytree.TreeSide;
 import algorithms.minimax.BinaryTreeMinimaxSearch;
 import dots.foureighty.util.Pair;
+import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.LinkedList;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MinimaxTest {
 
@@ -17,26 +19,28 @@ public class MinimaxTest {
 
     private static final BinaryTreeMinimaxSearch MINIMAX_SEARCH = new BinaryTreeMinimaxSearch();
 
-    public void runTests() {
-        singleNodeSearch();
-        singleBranchSearch();
-        treeSearch();
+    @Test
+    public void singleNodeSearch() {
+        Pair<LinkedList<TreeSide>, Float> singleNodeResults = MINIMAX_SEARCH.search(SINGLE_NODE);
+
+        assertEquals(new Pair<>(new LinkedList(), 1.0f), singleNodeResults);
+        assertNotEquals(new Pair<>(new LinkedList(), 2.0f), singleNodeResults);
+
     }
 
-    private void singleNodeSearch() {
-        assert MINIMAX_SEARCH.search(SINGLE_NODE).equals(new Pair<>(new LinkedList(), 1.0f));
-        assert !MINIMAX_SEARCH.search(SINGLE_NODE).equals(new Pair<>(new LinkedList(), 2.0f));
-    }
-
-    private void singleBranchSearch() {
+    @Test
+    public void singleBranchSearch() {
         Pair<LinkedList<TreeSide>, Float> single = MINIMAX_SEARCH.search(SINGLE_BRANCH);
-        assert single.getValue() == 2.0f;
-        assert Arrays.equals(single.getKey().toArray(), new TreeSide[]{TreeSide.RIGHT});
+        assertEquals(2.0f, single.getValue());
+        assertArrayEquals(new TreeSide[]{TreeSide.RIGHT}, single.getKey().toArray());
     }
 
-    private void treeSearch() {
+    @Test
+    public void treeSearch() {
         Pair<LinkedList<TreeSide>, Float> single = MINIMAX_SEARCH.search(BIG_TREE);
-        assert single.getValue() == 3.0f;
-        assert Arrays.equals(single.getKey().toArray(), new TreeSide[]{TreeSide.LEFT, TreeSide.RIGHT});
+
+        assertEquals(3.0f, single.getValue());
+
+        assertArrayEquals(new TreeSide[]{TreeSide.LEFT, TreeSide.RIGHT}, single.getKey().toArray());
     }
 }

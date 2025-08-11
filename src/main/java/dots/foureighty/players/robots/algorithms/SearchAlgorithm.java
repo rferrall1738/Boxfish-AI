@@ -2,27 +2,10 @@ package dots.foureighty.players.robots.algorithms;
 
 import dots.foureighty.util.Pair;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 
 public abstract class SearchAlgorithm<NodeType, TransitionType> {
-    protected abstract class NeighborGenerator {
-        /***
-         * Generate neighbors from a node.
-         * @param input Node to generate from.
-         * @return List of neighbors, and the input required to transition to the state.
-         */
-        protected abstract Iterator<Pair<NodeType, TransitionType>> getNeighbors(NodeType input);
-    }
 
-    public abstract class Evaluator {
-        /***
-         * When given a final state, evaluates how good the output is
-         * @param input Final state to evaluate.
-         * @return Metric to determine how good the output is.
-         */
-        public abstract float evaluate(NodeType input);
-    }
 
     /***
      * Searches the tree for the best output, and it's evaluation
@@ -32,6 +15,6 @@ public abstract class SearchAlgorithm<NodeType, TransitionType> {
      * @return
      */
     protected abstract Pair<LinkedList<TransitionType>, Float> search(NodeType input,
-                                                                      NeighborGenerator neighborGenerator,
-                                                                      Evaluator evaluator);
+                                                                      NeighborGenerator<NodeType, TransitionType> neighborGenerator,
+                                                                      Evaluator<NodeType> evaluator);
 }

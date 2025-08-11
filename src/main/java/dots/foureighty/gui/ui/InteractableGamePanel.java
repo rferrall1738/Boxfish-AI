@@ -20,7 +20,7 @@ class InteractableGamePanel extends GamePanel {
     private static final float TEMP_LINE_ALPHA = 0.7f;
     private static final float TEMP_BOX_ALPHA = 0.3f;
     private final MoveBuilder moveBuilder = new MoveBuilder(this.game.getBoard());
-
+    private GUILine hoveredLine = null;
     /***
      * Interface to allow the parent to be notified when a move is ready to be sent.
      */
@@ -42,6 +42,21 @@ class InteractableGamePanel extends GamePanel {
                 if (isEnabled() && !moveBuilder.isComplete()) {
                     Point clickPoint = e.getPoint();
                     placeLine(clickPoint);
+                }
+            }
+        });
+
+        this.addMouseMotionListener(new MouseAdapter() {
+            public void mouseMoved(MouseEvent e) {
+                if (isEnabled() && !moveBuilder.isComplete()) {
+                    Point mousePoint = e.getPoint();
+                    ArrayList<GUILine> validLines = getValidLines();
+                    GUILine nearest = findLineNearPoint(mousePoint, validLines);
+
+                    if (nearest != hoveredLine) {
+                        hoveredLine = nearest;
+                        repaint();
+                    }
                 }
             }
         });
@@ -98,6 +113,12 @@ class InteractableGamePanel extends GamePanel {
         for (Line line : moveBuilder.getLines()) {
             drawLine(g, line);
         }
+
+        if (hoveredLine != null && moveBuilder.canPlay(hoveredLine)) {
+            g.setColor(setAlpha(getPlayersColor(), 0.3f));
+            drawLine(g, hoveredLine);
+        }
+
     }
 
 
