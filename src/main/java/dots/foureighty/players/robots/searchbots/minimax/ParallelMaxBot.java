@@ -4,6 +4,8 @@ import dots.foureighty.game.GameSnapshot;
 import dots.foureighty.lines.Move;
 import dots.foureighty.lines.MoveIterator;
 import dots.foureighty.players.robots.Heuristic;
+import dots.foureighty.players.robots.algorithms.Evaluator;
+import dots.foureighty.players.robots.algorithms.NeighborGenerator;
 import dots.foureighty.util.Pair;
 
 import java.util.ArrayList;
