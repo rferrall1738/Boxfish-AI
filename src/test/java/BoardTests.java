@@ -15,23 +15,17 @@ public class BoardTests {
 
     @Test
     public void zeroByZeroBoard() {
-        assertThrows(UnsupportedBoardSizeException.class, () -> {
-            StandardBoards.AMERICAN.generateBoard(0, 0);
-        });
+        assertThrows(UnsupportedBoardSizeException.class, () -> StandardBoards.AMERICAN.generateBoard(0, 0));
     }
 
     @Test
     public void negativeBoardSize() {
-        assertThrows(UnsupportedBoardSizeException.class, () -> {
-            StandardBoards.AMERICAN.generateBoard(-1, 0);
-        });
+        assertThrows(UnsupportedBoardSizeException.class, () -> StandardBoards.AMERICAN.generateBoard(-1, 0));
     }
 
     @Test
     public void boardTooBig() {
-        assertThrows(UnsupportedBoardSizeException.class, () -> {
-            StandardBoards.AMERICAN.generateBoard(510, 100);
-        });
+        assertThrows(UnsupportedBoardSizeException.class, () -> StandardBoards.AMERICAN.generateBoard(510, 100));
     }
 
 

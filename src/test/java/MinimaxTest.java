@@ -6,11 +6,9 @@ import algorithms.minimax.BinaryTreeMinimaxSearch;
 import dots.foureighty.util.Pair;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MinimaxTest {
 
@@ -30,15 +28,19 @@ public class MinimaxTest {
 
     }
 
-    private void singleBranchSearch() {
+    @Test
+    public void singleBranchSearch() {
         Pair<LinkedList<TreeSide>, Float> single = MINIMAX_SEARCH.search(SINGLE_BRANCH);
-        assert single.getValue() == 2.0f;
-        assert Arrays.equals(single.getKey().toArray(), new TreeSide[]{TreeSide.RIGHT});
+        assertEquals(2.0f, single.getValue());
+        assertArrayEquals(new TreeSide[]{TreeSide.RIGHT}, single.getKey().toArray());
     }
 
-    private void treeSearch() {
+    @Test
+    public void treeSearch() {
         Pair<LinkedList<TreeSide>, Float> single = MINIMAX_SEARCH.search(BIG_TREE);
-        assert single.getValue() == 3.0f;
-        assert Arrays.equals(single.getKey().toArray(), new TreeSide[]{TreeSide.LEFT, TreeSide.RIGHT});
+
+        assertEquals(3.0f, single.getValue());
+
+        assertArrayEquals(new TreeSide[]{TreeSide.LEFT, TreeSide.RIGHT}, single.getKey().toArray());
     }
 }

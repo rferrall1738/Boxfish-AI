@@ -16,8 +16,6 @@ public class StartScreen extends JFrame {
 
     private JComboBox<String> player1Type;
     private JComboBox<String> player2Type;
-    private JButton colorPicker1;
-    private JButton colorPicker2;
     private JComboBox<Integer> depthPicker1;
     private JComboBox<Integer> depthPicker2;
 
@@ -105,11 +103,9 @@ public class StartScreen extends JFrame {
 
         if (isPlayer1) {
             this.player1Type = playerType;
-            this.colorPicker1 = colorPicker;
             this.depthPicker1 = depthSelector;
         } else {
             this.player2Type = playerType;
-            this.colorPicker2 = colorPicker;
             this.depthPicker2 = depthSelector;
         }
 

@@ -49,6 +49,7 @@ public abstract class ParallelMinimaxSearchAlgorithm<InputType, TransitionType> 
                 }
             }
         } catch (InterruptedException | ExecutionException e) {
+            //TODO: Add better error handling
             e.printStackTrace();
         } finally {
             executor.shutdown();
