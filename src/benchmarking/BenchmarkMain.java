@@ -1,5 +1,3 @@
-package dots.foureighty.tools;
-
 import dots.foureighty.game.GameFactory;
 import dots.foureighty.game.GameSnapshot;
 import dots.foureighty.game.boards.StandardBoards;

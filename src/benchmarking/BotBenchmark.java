@@ -1,5 +1,3 @@
-package dots.foureighty.tools;
-
 import java.util.LinkedList;
 import java.util.LongSummaryStatistics;
 import java.util.stream.LongStream;

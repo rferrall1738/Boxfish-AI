@@ -54,7 +54,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>dots.foureighty.tools.BenchmarkMain</mainClass>
+                            <mainClass>dots.foureighty.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

@@ -20,6 +20,10 @@ public class ParallelMaxBot extends MinimaxBot{
 
     @Override
     public Move getMove(GameSnapshot gameState){
+        if (getDepth() <= 2) {
+            return super.getMove(gameState);
+        }
+
         MinimaxState initialState = new MinimaxState(gameState.getBoard());
 
         final MoveIterator moveIterator = new MoveIterator(initialState.getBoard());
