@@ -6,6 +6,7 @@ import dots.foureighty.game.boards.StandardBoards;
 import dots.foureighty.gui.GameWatcher;
 import dots.foureighty.players.robots.dumb.GreedyBot;
 import dots.foureighty.players.robots.searchbots.minimax.AlphaBetaBot;
+import dots.foureighty.gui.StartScreen;
 
 public class Main {
     public static void main(String[] args) {
