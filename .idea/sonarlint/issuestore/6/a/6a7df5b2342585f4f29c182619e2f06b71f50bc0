@@ -1,16 +1,0 @@
-
-q
-java:S3740"/Provide the parametrized type for this generic.(”Û¶8æ‘Àâ‰3J$0f5ca014-d0c4-4978-8119-e9e65e86b8b9
-‹	java:S103
-"KSplit this 133 characters long line (which is greater than 120 authorized).(óâ¯üûÿÿÿÿJ$708d7ecd-6e68-4bcc-b5f0-3f9895c745ac
-‹	java:S103"KSplit this 204 characters long line (which is greater than 120 authorized).(Ê¼€£ÿÿÿÿÿJ$c7eaf09d-8a4d-4991-988a-0a6b766173a4
-†	java:S103"KSplit this 140 characters long line (which is greater than 120 authorized).(³îÕ„J$31131a92-4e1d-4690-85bd-730f4dcc9937
-…	java:S103"KSplit this 206 characters long line (which is greater than 120 authorized).(”Û¶J$1bf1c1db-287d-49a8-a519-d0cbd18e98ee
-†	java:S103"KSplit this 124 characters long line (which is greater than 120 authorized).(òÌÂ†J$8d7c19c3-2804-445c-80e2-14068d9e2d31
-†	java:S103%"KSplit this 151 characters long line (which is greater than 120 authorized).(šÔ¡“J$952fb446-5b08-4042-b7ac-07dacd7dd7f0
-‰	java:S119
-"IRename this generic name to match the regular expression '^[A-Z][0-9]?$'.(óâ¯üûÿÿÿÿJ$ec87a2a0-d0d0-4477-8073-91353162d024
-‰	java:S119
-"IRename this generic name to match the regular expression '^[A-Z][0-9]?$'.(óâ¯üûÿÿÿÿJ$e5e8ad68-ff1b-4fbf-bebb-5cf7077b9f34
-
-java:S3776"RRefactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.(”Û¶J$f6916b1b-0d8b-49af-8271-e48aec9ae065

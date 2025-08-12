@@ -1,5 +1,0 @@
-
-
-java:S1319	"fThe type of "lines" should be an interface such as "List" rather than the implementation "LinkedList".(ñÌÌ°ûÿÿÿÿ
-‡
-java:S1319"qThe return type of this method should be an interface such as "List" rather than the implementation "LinkedList".(¾”ê
