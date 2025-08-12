@@ -5,7 +5,7 @@ import algorithms.binarytree.BinaryTreeNode;
 import algorithms.binarytree.BinaryTreeValue;
 import algorithms.binarytree.TreeSide;
 import dots.foureighty.players.robots.algorithms.Evaluator;
-import dots.foureighty.players.robots.algorithms.MCTSSearchAlgorithm;
+import dots.foureighty.players.robots.algorithms.mcts.MCTSSearchAlgorithm;
 import dots.foureighty.players.robots.algorithms.NeighborGenerator;
 import dots.foureighty.util.Pair;
 
