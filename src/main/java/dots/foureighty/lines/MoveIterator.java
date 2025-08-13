@@ -11,6 +11,7 @@ public class MoveIterator implements Iterator<Move> {
     private final BitSet unplayedBitSet;
     private final LinkedList<Pair<Line, MoveIterator>> queuedIterators = new LinkedList<>();
     private final HashSet<Board> seenBoards;
+    private Move queuedNext = null;
 
     public MoveIterator(Board board) {
         this.board = board;
@@ -25,28 +26,22 @@ public class MoveIterator implements Iterator<Move> {
     }
 
     @Override
-    public boolean hasNext() {
-        if (!queuedIterators.isEmpty()) {
-            return queuedIterators.getFirst().getValue().hasNext();
+    public boolean hasNext() { //TODO: Fix this
+        if(queuedNext != null){
+            return true;
         }
-        int nextIndex = unplayedBitSet.nextSetBit(index + 1);
-
-        if (nextIndex == -1) {
-            return false;
-        }
-        Board newBoard = board.append(nextIndex);
-
-        if (seenBoards.contains(newBoard)) {
-            this.index = nextIndex;
-            return hasNext();
-        }
-        return true;
+        queuedNext = next();
+        return queuedNext != null;
     }
 
-    //TODO: Check for duplicate moves. Move iterator should not return equal moves. (Line A, Line B, Line C)
-    // is the same as (Line B, Line A, Line C)
     @Override
     public Move next() {
+        if(queuedNext != null){
+            Move move = queuedNext;
+            queuedNext = null;
+            return move;
+        }
+
         if (queuedIterators.isEmpty()) {
             return getMove();
         } else {
@@ -75,11 +70,13 @@ public class MoveIterator implements Iterator<Move> {
     private Move getChildMove() {
         MoveIterator childIterator;
         Move move;
-
         do {
             childIterator = queuedIterators.peekFirst().getValue();
             if (!childIterator.hasNext()) {
                 queuedIterators.removeFirst();
+            }
+            if(queuedIterators.isEmpty()) {
+                return getMove();
             }
             move = childIterator.next();
         } while (move == null);
@@ -111,5 +108,10 @@ public class MoveIterator implements Iterator<Move> {
             return;
         }
         queuedIterators.removeFirst();
+    }
+
+    @Override
+    public String toString() {
+        return "Index: " + index + ", Board: " + board + "Unplayed: " + unplayedBitSet  + " Queued: [" + queuedIterators + "]";
     }
 }

@@ -2,16 +2,16 @@ package dots.foureighty.players.robots.heuristics;
 
 import dots.foureighty.lines.Line;
 import dots.foureighty.players.robots.Heuristic;
-import dots.foureighty.players.robots.searchbots.minimax.MinimaxState;
+import dots.foureighty.players.robots.searchbots.DABState;
 
 import java.awt.*;
 import java.util.List;
 
 
-public class GreedyCompleteBox implements Heuristic<MinimaxState> {
+public class GreedyCompleteBox implements Heuristic<DABState> {
 
     @Override
-    public float evaluate(MinimaxState state) {
+    public float evaluate(DABState state) {
         float score = 0f;
         List<Point> boxes = state.getBoard().getBoxes();
 

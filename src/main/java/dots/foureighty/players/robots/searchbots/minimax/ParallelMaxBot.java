@@ -5,7 +5,7 @@ import dots.foureighty.lines.Move;
 import dots.foureighty.lines.MoveIterator;
 import dots.foureighty.players.robots.Heuristic;
 import dots.foureighty.players.robots.algorithms.Evaluator;
-import dots.foureighty.players.robots.algorithms.NeighborGenerator;
+import dots.foureighty.players.robots.searchbots.DABState;
 import dots.foureighty.util.Pair;
 
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.concurrent.*;
 
 public class ParallelMaxBot extends MinimaxBot{
-    public ParallelMaxBot(int depth, Heuristic<MinimaxState>... heuristics){
+    public ParallelMaxBot(int depth, Heuristic<DABState>... heuristics){
         super(depth, heuristics);
     }
 
@@ -24,7 +24,7 @@ public class ParallelMaxBot extends MinimaxBot{
             return super.getMove(gameState);
         }
 
-        MinimaxState initialState = new MinimaxState(gameState.getBoard());
+        DABState initialState = new DABState(gameState.getBoard());
 
         final MoveIterator moveIterator = new MoveIterator(initialState.getBoard());
 
@@ -38,8 +38,8 @@ public class ParallelMaxBot extends MinimaxBot{
 
             // creates a task that performs minimax on the child state
             tasks.add(() -> {
-                MinimaxState childState = initialState.withMove(move);
-                Pair<LinkedList<Move>,Float> result = search(childState, getNeighborGenerator(),getEvaluator(), getDepth() -1, false);
+                DABState childState = initialState.withMove(move);
+                Pair<LinkedList<Move>,Float> result = search(childState, new MinimaxNeighborGenerator(),getEvaluator(), getDepth() -1, false);
                 return new Pair<>(move, result.getValue());
             });
         }
@@ -73,7 +73,6 @@ public class ParallelMaxBot extends MinimaxBot{
 
     private Evaluator getEvaluator(){ return super.stateEvaluator;}
 
-    private NeighborGenerator getNeighborGenerator(){ return super.neighborGenerator;}
 
     @Override
     public String getName(){return "ParallelMiniMaxBot (" + depth + ")";}
