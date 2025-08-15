@@ -1,23 +1,23 @@
-package dots.foureighty.players.robots.searchbots.minimax;
+package dots.foureighty.players.robots.searchbots;
 
 import dots.foureighty.game.boards.Board;
 import dots.foureighty.lines.Move;
 import dots.foureighty.lines.MoveBuilder;
 
-public class MinimaxState {
+public class DABState {
     private final Board board;
     private final int selfScore;
     private final int opponentScore;
     private final boolean maximizing;
 
-    public MinimaxState(Board board) {
+    public DABState(Board board) {
         this.board = board;
         maximizing = true;
         selfScore = 0;
         opponentScore = 0;
     }
 
-    private MinimaxState(Board board, int selfScore, int opponentScore, boolean maximizing) {
+    private DABState(Board board, int selfScore, int opponentScore, boolean maximizing) {
         this.board = board;
         this.selfScore = selfScore;
         this.opponentScore = opponentScore;
@@ -36,13 +36,13 @@ public class MinimaxState {
         return board;
     }
 
-    public MinimaxState withMove(Move move) {
+    public DABState withMove(Move move) {
         //TODO Optimize this.
         MoveBuilder builder = new MoveBuilder(board);
         builder.addAll(move.getLines());
         int newBoxes = builder.getNewBoxes().length;
 
-        return new MinimaxState(builder.getCurrentBoard(),
+        return new DABState(builder.getCurrentBoard(),
                 maximizing ? selfScore + newBoxes : selfScore,
                 maximizing ? opponentScore : opponentScore + newBoxes, !maximizing);
     }

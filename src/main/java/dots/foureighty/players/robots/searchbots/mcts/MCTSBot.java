@@ -1,28 +1,31 @@
-package dots.foureighty.players.robots.searchbots.minimax;
+package dots.foureighty.players.robots.searchbots.mcts;
 
 import dots.foureighty.game.GameSnapshot;
 import dots.foureighty.lines.Move;
 import dots.foureighty.players.Player;
-import dots.foureighty.players.robots.Heuristic;
 import dots.foureighty.players.robots.algorithms.Evaluator;
-import dots.foureighty.players.robots.algorithms.minimax.MinimaxSearchAlgorithm;
+import dots.foureighty.players.robots.algorithms.mcts.MCTSSearchAlgorithm;
 import dots.foureighty.players.robots.searchbots.DABState;
+import dots.foureighty.players.robots.searchbots.minimax.MinimaxNeighborGenerator;
 import dots.foureighty.util.ColorUtils;
 import dots.foureighty.util.Pair;
 
 import java.awt.*;
 import java.util.LinkedList;
 
+public class MCTSBot  extends MCTSSearchAlgorithm<DABState,Move> implements Player {
+    private Color color = Color.PINK;
+    private final int iterations;
 
-public class MinimaxBot extends MinimaxSearchAlgorithm<DABState, Move> implements Player {
-    protected final int depth;
-    private Color color = Color.ORANGE;
-    private final Heuristic<DABState>[] heuristics;
-
-    public MinimaxBot(int depth, Heuristic<DABState>... heuristics) {
-        this.depth = depth;
-        this.heuristics = heuristics;
+    public MCTSBot(int maxIterations) throws IllegalArgumentException {
+        this(maxIterations, Math.sqrt(2)); //TODO: Test this and pick a better value
     }
+
+    public MCTSBot(int maxIterations, double explorationParameter) throws IllegalArgumentException {
+        super(maxIterations, explorationParameter);
+        iterations = maxIterations;
+    }
+
 
     @Override
     public Color getColor() {
@@ -36,7 +39,7 @@ public class MinimaxBot extends MinimaxSearchAlgorithm<DABState, Move> implement
 
     @Override
     public String getName() {
-        return "MinimaxBot (" + depth + ")";
+        return "MonteCarlo Bot (" + iterations + ")";
     }
 
     protected final Evaluator stateEvaluator = new Evaluator<DABState>() {
@@ -49,9 +52,6 @@ public class MinimaxBot extends MinimaxSearchAlgorithm<DABState, Move> implement
         @Override
         public float evaluate(DABState input) {
             float score = input.getSelfScore() - input.getOpponentScore();
-            for (Heuristic<DABState> heuristic : heuristics) {
-                score += heuristic.evaluate(input);
-            }
             return score;
         }
     };
@@ -60,10 +60,7 @@ public class MinimaxBot extends MinimaxSearchAlgorithm<DABState, Move> implement
     @Override
     public Move getMove(GameSnapshot gameState) {
         DABState initialState = new DABState(gameState.getBoard());
-        Pair<LinkedList<Move>, Float> result = search(initialState, new MinimaxNeighborGenerator(), stateEvaluator, depth, true);
-
+        Pair<LinkedList<Move>, Float> result = search(initialState, new MinimaxNeighborGenerator(), stateEvaluator);
         return result.getKey().getFirst();
     }
-
-
 }
