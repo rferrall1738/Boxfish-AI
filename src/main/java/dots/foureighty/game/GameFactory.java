@@ -180,6 +180,13 @@ public class GameFactory {
         }
         Game game = new Game(gameBoard, player1, player2);
 
+        if (player1 instanceof GameUpdateListener) {
+            updateListeners.add((GameUpdateListener) player1);
+        }
+        if (player2 instanceof GameUpdateListener) {
+            updateListeners.add((GameUpdateListener) player2);
+        }
+
         updateListeners.forEach(game::registerGameUpdateListener);
 
         return game;

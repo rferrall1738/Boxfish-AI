@@ -11,6 +11,10 @@ public class MoveSubmissionPanel extends JPanel {
     private final JButton playButton;
     private final JButton clearButton;
     private final InteractableGamePanel interactableGamePanel;
+    private final JPanel footer = new JPanel(new CardLayout());
+    private final JPanel buttonsPanel = new JPanel();
+    private final JPanel waitingPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
 
     public MoveSubmissionPanel(GameSnapshot game, MoveHandler moveHandler) {
         this.moveHandler = moveHandler;
@@ -25,21 +29,26 @@ public class MoveSubmissionPanel extends JPanel {
         this.interactableGamePanel = new InteractableGamePanel(game, moveStatusListener);
         add(this.interactableGamePanel, BorderLayout.CENTER);
 
-
-
         this.playButton = new JButton("Play Move");
         playButton.setEnabled(false);
         playButton.addActionListener((e) -> this.submitMove());
         this.clearButton = new JButton("Clear Move");
         clearButton.setEnabled(false);
-
         clearButton.addActionListener((e) -> this.clearQueuedMove());
-        JPanel buttons = new JPanel();
 
-        buttons.add(playButton);
-        buttons.add(clearButton);
+        buttonsPanel.add(playButton);
+        buttonsPanel.add(clearButton);
+        footer.add(buttonsPanel, "PLAY");
 
-        add(buttons, BorderLayout.PAGE_END);
+        waitingPanel.add(new JLabel("Waiting for other player to make move..."));
+        footer.add(waitingPanel, "WAIT");
+
+        add(footer, BorderLayout.PAGE_END);
+
+        showCard("PLAY");
+    }
+    private void showCard(String name) {
+        ((CardLayout) footer.getLayout()).show(footer, name);
     }
     public void clearQueuedMove() {
         this.interactableGamePanel.clearQueuedMove();
@@ -51,7 +60,10 @@ public class MoveSubmissionPanel extends JPanel {
         interactableGamePanel.setEnabled(false);
         //TODO: Exit out of this view.
         // Display a different view while waiting for opponent to make a move.
-        this.setEnabled(false);
+        //this.setEnabled(false);
+        showCard("WAIT");
     }
 
 }
+
+
