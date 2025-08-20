@@ -204,8 +204,8 @@ public class StartScreen extends JFrame {
                 .build()
                 .play();
 
-        revalidate();
-        repaint();
+        setVisible(false);
+        dispose();
     }
 
     private String validateName(String s, String fallback) {

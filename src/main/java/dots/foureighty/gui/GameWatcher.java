@@ -3,6 +3,7 @@ package dots.foureighty.gui;
 import dots.foureighty.game.GameSnapshot;
 import dots.foureighty.listeners.GameUpdateListener;
 import dots.foureighty.listeners.GameUpdateType;
+import dots.foureighty.gui.ui.MusicPlayerPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,6 +23,8 @@ public class GameWatcher extends JFrame implements GameUpdateListener {
 
     private GamePanel gamePanel;
     private boolean registered = true;
+
+    private MusicPlayerPanel musicPanel;
 
     public GameWatcher() {
         super("GameWatcher");
@@ -92,6 +95,10 @@ public class GameWatcher extends JFrame implements GameUpdateListener {
         updatePlayerPanels();
         getContentPane().add(gamePanel, BorderLayout.CENTER);
         getContentPane().add(playersPanel, BorderLayout.PAGE_START);
+
+        // adds music player to bottom of screen
+        musicPanel = new MusicPlayerPanel("/dots/foureighty/music/DotsAndBoxes.wav");
+        getContentPane().add(musicPanel, BorderLayout.PAGE_END);
 
         setVisible(true);
         pack();
