@@ -12,8 +12,6 @@ public class MoveSubmissionPanel extends JPanel {
     private final JButton clearButton;
     private final InteractableGamePanel interactableGamePanel;
     private final JPanel footer = new JPanel(new CardLayout());
-    private final JPanel buttonsPanel = new JPanel();
-    private final JPanel waitingPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
 
     public MoveSubmissionPanel(GameSnapshot game, MoveHandler moveHandler) {
@@ -36,11 +34,30 @@ public class MoveSubmissionPanel extends JPanel {
         clearButton.setEnabled(false);
         clearButton.addActionListener((e) -> this.clearQueuedMove());
 
+        JPanel buttonsPanel = new JPanel();
         buttonsPanel.add(playButton);
         buttonsPanel.add(clearButton);
         footer.add(buttonsPanel, "PLAY");
 
-        waitingPanel.add(new JLabel("Waiting for other player to make move..."));
+        JLabel waitingText = new JLabel();
+
+        Thread waitingAnimation = new Thread(() -> {
+            for(int i = 0; i == i; i = (i + 1) % 5) {
+                StringBuilder sb = new StringBuilder("Waiting for other player to make move");
+                for (int j = 0; j < i; j++) {
+                    sb.append(".");
+                }
+                waitingText.setText(sb.toString());
+                try {
+                    Thread.sleep(400);
+                } catch (InterruptedException e) {
+                    System.exit(1);
+                }
+            }
+        });
+        JPanel waitingPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        waitingPanel.add(waitingText);
+        waitingAnimation.start();
         footer.add(waitingPanel, "WAIT");
 
         add(footer, BorderLayout.PAGE_END);
@@ -58,9 +75,6 @@ public class MoveSubmissionPanel extends JPanel {
         playButton.setEnabled(false);
         clearButton.setEnabled(false);
         interactableGamePanel.setEnabled(false);
-        //TODO: Exit out of this view.
-        // Display a different view while waiting for opponent to make a move.
-        //this.setEnabled(false);
         showCard("WAIT");
     }
 

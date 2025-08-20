@@ -14,8 +14,6 @@ public class GameWatcher extends JFrame implements GameUpdateListener {
     private GameSnapshot game;
 
     private final JPanel playersPanel = new JPanel();
-    private final JPanel player1Panel = new JPanel();
-    private final JPanel player2Panel = new JPanel();
     private final JLabel player1Name = new JLabel();
     private final JLabel player2Name = new JLabel();
     private final JLabel player1Score = new JLabel();
@@ -23,8 +21,6 @@ public class GameWatcher extends JFrame implements GameUpdateListener {
 
     private GamePanel gamePanel;
     private boolean registered = true;
-
-    private MusicPlayerPanel musicPanel;
 
     public GameWatcher() {
         super("GameWatcher");
@@ -45,7 +41,9 @@ public class GameWatcher extends JFrame implements GameUpdateListener {
 
         playersPanel.setLayout(new GridLayout(1, 2));
 
+        JPanel player1Panel = new JPanel();
         player1Panel.setLayout(new GridLayout(2, 1));
+        JPanel player2Panel = new JPanel();
         player2Panel.setLayout(new GridLayout(2, 1));
 
         playersPanel.add(player1Panel, 0, 0);
@@ -97,8 +95,12 @@ public class GameWatcher extends JFrame implements GameUpdateListener {
         getContentPane().add(playersPanel, BorderLayout.PAGE_START);
 
         // adds music player to bottom of screen
-        musicPanel = new MusicPlayerPanel("/dots/foureighty/music/DotsAndBoxes.wav");
-        getContentPane().add(musicPanel, BorderLayout.PAGE_END);
+        try {
+            MusicPlayerPanel musicPanel = new MusicPlayerPanel(this.getClass().getResource("/dots/foureighty/music/DotsAndBoxes.wav"));
+            getContentPane().add(musicPanel, BorderLayout.PAGE_END);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         setVisible(true);
         pack();

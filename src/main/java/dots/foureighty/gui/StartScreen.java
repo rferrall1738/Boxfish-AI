@@ -5,6 +5,7 @@ import dots.foureighty.game.GameFactory;
 import dots.foureighty.game.boards.StandardBoards;
 import dots.foureighty.players.LocalHumanPlayer;
 import dots.foureighty.players.Player;
+import dots.foureighty.players.robots.RobotTypes;
 import dots.foureighty.players.robots.dumb.GreedyBot;
 import dots.foureighty.players.robots.dumb.RandomBot;
 import dots.foureighty.players.robots.searchbots.minimax.AlphaBetaBot;
@@ -12,6 +13,8 @@ import dots.foureighty.players.robots.searchbots.mcts.MCTSBot;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
+import java.util.HashMap;
 
 public class StartScreen extends JFrame {
 
@@ -27,6 +30,15 @@ public class StartScreen extends JFrame {
     private Color selectedColor2 = Color.BLUE;
     private JSpinner xSizeSpin;
     private JSpinner ySizeSpin;
+
+    private final static HashMap<String, RobotTypes> ROBOT_CONVERSIONS = new HashMap<>();
+
+    static {
+        RobotTypes[] values = RobotTypes.values();
+        for (RobotTypes value : values) {
+            ROBOT_CONVERSIONS.put(value.getName(), value);
+        }
+    }
 
     /***
      * Creates a start screen for users to choose bot type for each player
@@ -94,7 +106,8 @@ public class StartScreen extends JFrame {
         JLabel playerLabel = new JLabel(label + ":");
         panel.add(playerLabel);
 
-        JComboBox<String> playerType = new JComboBox<>(new String[]{"Human Player", "Random Bot", "Greedy Bot", "Alpha-Beta Bot", "Monte Carlo Tree Search Bot"});
+        JComboBox<String> playerType = new JComboBox<>(Arrays.stream(RobotTypes.values()).map(RobotTypes::getName).toArray(String[]::new));
+
         panel.add(playerType);
 
         // Name (for humans)
@@ -131,19 +144,17 @@ public class StartScreen extends JFrame {
         // Initial visibility
         Runnable toggle = () -> {
             String choice = (String) playerType.getSelectedItem();
-            boolean isHuman = "Human Player".equals(choice);
-            boolean isAlpha = "Alpha-Beta Bot".equals(choice);
-            boolean isMCTS = "Monte Carlo Tree Search Bot".equals(choice);
+            RobotTypes type = ROBOT_CONVERSIONS.get(choice);
 
-            nameLbl.setVisible(isHuman);
-            nameField.setVisible(isHuman);
-            colorPicker.setVisible(isHuman);
+            nameLbl.setVisible(type == RobotTypes.HUMAN);
+            nameField.setVisible(type == RobotTypes.HUMAN);
+            colorPicker.setVisible(type == RobotTypes.HUMAN);
 
-            depthLbl.setVisible(isAlpha);
-            depthSpinner.setVisible(isAlpha);
+            depthLbl.setVisible(type == RobotTypes.ALPHA_BETA);
+            depthSpinner.setVisible(type == RobotTypes.ALPHA_BETA);
 
-            maxIterationsLbl.setVisible(isMCTS);
-            maxIterationSpinner.setVisible(isMCTS);
+            maxIterationsLbl.setVisible(type == RobotTypes.MCTS);
+            maxIterationSpinner.setVisible(type == RobotTypes.MCTS);
 
             panel.revalidate();
             panel.repaint();
@@ -173,14 +184,15 @@ public class StartScreen extends JFrame {
         int y = (int) ySizeSpin.getValue();
 
         if (x < 3 || y < 3) {
-            JOptionPane.showMessageDialog(this, "Board must be at least 3 × 3.", "Invalid Size", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    "Board must be at least 3 × 3.", "Invalid Size", JOptionPane.WARNING_MESSAGE);
             revalidate();
             repaint();
             return;
         }
 
         Player p1 = makePlayer(
-                (String) player1Type.getSelectedItem(),
+                ROBOT_CONVERSIONS.get(player1Type.getSelectedItem()),
                 validateName(p1NameField.getText(), "Player 1"),
                 selectedColor1,
                 depthSpinner1,
@@ -188,7 +200,7 @@ public class StartScreen extends JFrame {
         );
 
         Player p2 = makePlayer(
-                (String) player2Type.getSelectedItem(),
+                ROBOT_CONVERSIONS.get(player2Type.getSelectedItem()),
                 validateName(p2NameField.getText(), "Player 2"),
                 selectedColor2,
                 depthSpinner2,
@@ -214,17 +226,17 @@ public class StartScreen extends JFrame {
         return t.isEmpty() ? fallback : t;
     }
 
-    private Player makePlayer(String type, String name, Color color, JSpinner depthSpinner, JSpinner maxIterationSpinner) {
+    private Player makePlayer(RobotTypes type, String name, Color color, JSpinner depthSpinner, JSpinner maxIterationSpinner) {
         switch (type) {
-            case "Greedy Bot":
+            case GREEDY:
                 return new GreedyBot();
-            case "Alpha-Beta Bot":
+            case ALPHA_BETA:
                 return new AlphaBetaBot((Integer) depthSpinner.getValue());
-            case "Monte Carlo Tree Search Bot":
+            case MCTS:
                 return new MCTSBot((Integer) maxIterationSpinner.getValue());
-            case "Random Bot":
+            case RANDOM:
                 return new RandomBot();
-            case "Human Player":
+            case HUMAN:
             default:
                 return new LocalHumanPlayer(name, color);
         }

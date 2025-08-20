@@ -1,11 +1,10 @@
 package dots.foureighty.gui.ui;
 
-import dots.foureighty.gui.GamePanel;
-
 import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
 
 /***
@@ -13,8 +12,6 @@ import java.net.URL;
  * volume slider
  */
 public class MusicPlayerPanel extends JPanel {
-    private final String resourcePath;
-    private Clip clip;
     private FloatControl gain;
     private BooleanControl muteControl;
     private final JButton muteBtn = new JButton("Mute");
@@ -22,8 +19,12 @@ public class MusicPlayerPanel extends JPanel {
     private boolean softMuted = false;
     private float lastDbBeforeSoftMute = 0f;
 
-    public MusicPlayerPanel(String resourcePath) {
-        this.resourcePath = resourcePath;
+    public MusicPlayerPanel(URL resourcePath) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+
+        if (resourcePath == null) {
+            throw new FileNotFoundException("Could not found the specified audio resource");
+        }
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(resourcePath);
 
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
@@ -43,26 +44,10 @@ public class MusicPlayerPanel extends JPanel {
 
         muteBtn.addActionListener(e -> toggleMute());
         volume.addChangeListener(e -> applyVolume());
-
-        loadAndPlayLoop();
+        play(audioInputStream);
     }
 
-    private void loadAndPlayLoop() {
-        try {
-            URL url = getClass().getResource(resourcePath);
-            if (url != null) {
-                play(AudioSystem.getAudioInputStream(url));
-            }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Failed to play WAV:\n" + ex.getMessage(),
-                    "Audio Error", JOptionPane.ERROR_MESSAGE);
-            ex.printStackTrace();
-            muteBtn.setEnabled(false);
-            volume.setEnabled(false);
-        }
-    }
-
-    private void play(AudioInputStream in) throws Exception {
+    private void play(AudioInputStream in) throws IOException, LineUnavailableException {
         AudioFormat src = in.getFormat();
         AudioFormat dst = new AudioFormat(
                 AudioFormat.Encoding.PCM_SIGNED,
@@ -75,7 +60,7 @@ public class MusicPlayerPanel extends JPanel {
         );
         AudioInputStream din = AudioSystem.getAudioInputStream(dst, in);
 
-        clip = AudioSystem.getClip();
+        Clip clip = AudioSystem.getClip();
         clip.open(din);
         in.close();
         din.close();
