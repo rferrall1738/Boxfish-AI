@@ -11,7 +11,7 @@ public class RandomBinaryTree extends BinaryTreeBranch {
      * @param branchingProbability The probability a node results in a branch
      */
     public RandomBinaryTree(float branchingProbability) {
-        this(branchingProbability, 500);
+        this(branchingProbability, 50);
     }
     /**
      * Makes a binary tree with values in the range of 2^32 possibilities, and a defined branching probability
