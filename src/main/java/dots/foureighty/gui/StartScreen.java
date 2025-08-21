@@ -24,7 +24,9 @@ public class StartScreen extends JFrame {
     private JTextField p1NameField;
     private JTextField p2NameField;
     private Color selectedColor1 = Color.RED;
-    private Color selectedColor2 = Color.BLUE;
+    private Color selectedColor2 = Color.decode("0x075aae");
+    private Color selectedColor3 = Color.decode("0x97d4b5");
+    private Color backgroundColor = Color.decode("0xf9f3de");
     private JSpinner xSizeSpin;
     private JSpinner ySizeSpin;
 
@@ -40,11 +42,12 @@ public class StartScreen extends JFrame {
         // Main container
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
+        panel.setBackground(backgroundColor);
         // Title label
         JLabel title = new JLabel("Welcome to Dots & Boxes!");
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
         title.setFont(new Font("Arial", Font.BOLD, 28));
+        title.setForeground(selectedColor2);
         panel.add(title);
 
         // Board size row (min 3x3)
@@ -60,6 +63,7 @@ public class StartScreen extends JFrame {
         startButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         startButton.setMaximumSize(new Dimension(200, 50));
         startButton.addActionListener(e -> startGame());
+        startButton.setBackground(selectedColor3);
         panel.add(startButton);
 
         // Display the UI
@@ -80,6 +84,8 @@ public class StartScreen extends JFrame {
         row.add(new JLabel(" Y:"));
         row.add(ySizeSpin);
 
+        row.setBackground(backgroundColor);
+
         return row;
     }
 
@@ -88,6 +94,7 @@ public class StartScreen extends JFrame {
     // Options right now: random, greedy bot, alpha beta
     private JPanel createPlayerSelectionPanel(String label, boolean isPlayer1) {
         JPanel panel = new JPanel();
+        panel.setBackground(backgroundColor);
         panel.setLayout(new FlowLayout());
 
         // Label for players
