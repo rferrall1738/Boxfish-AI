@@ -11,14 +11,22 @@ public class RandomBinaryTree extends BinaryTreeBranch {
      * @param branchingProbability The probability a node results in a branch
      */
     public RandomBinaryTree(float branchingProbability) {
-        super(generateChild(branchingProbability), generateChild(branchingProbability));
+        this(branchingProbability, 50);
+    }
+    /**
+     * Makes a binary tree with values in the range of 2^32 possibilities, and a defined branching probability
+     * @param branchingProbability The probability a node results in a branch
+     * @param maxDepth of the tree
+     */
+    public RandomBinaryTree(float branchingProbability, int maxDepth) {
+        super(generateChild(branchingProbability, maxDepth), generateChild(branchingProbability, maxDepth));
     }
 
-    private static BinaryTreeNode generateChild(float branchingProbability) {
+    private static BinaryTreeNode generateChild(float branchingProbability, int depth) {
         boolean branch = RANDOM.nextFloat() < branchingProbability;
 
-        if (branch) {
-            return new RandomBinaryTree(branchingProbability);
+        if (branch && depth > 0) {
+            return new RandomBinaryTree(branchingProbability, depth - 1);
         } else {
             return new BinaryTreeValue(RANDOM.nextInt());
         }
