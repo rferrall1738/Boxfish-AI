@@ -12,14 +12,14 @@ import dots.foureighty.gui.StartScreen;
 public class Main {
     public static void main(String[] args) {
         // Uncomment for main screen
-        new StartScreen();
+        //new StartScreen();
 
-//        new GameFactory().withXSize(7).withYSize(7)
-//                    .withUpdateListener(new GameWatcher())
-//                    .withBoardGenerator(StandardBoards.AMERICAN)
-//                .withPlayer2(new AlphaBetaBot(5))
-//                .withPlayer1(new MCTSBot(1000))
-//                .build().play();
+        new GameFactory().withXSize(7).withYSize(7)
+                    .withUpdateListener(new GameWatcher())
+                    .withBoardGenerator(StandardBoards.AMERICAN)
+                .withPlayer2(new AlphaBetaBot(5))
+                .withPlayer1(new MCTSBot(1000))
+                .build().play();
     }
 
 }
