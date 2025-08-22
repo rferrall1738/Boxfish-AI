@@ -6,7 +6,7 @@ import dots.foureighty.util.Pair;
 
 import java.util.*;
 
-public abstract class MCTSSearchAlgorithm<NodeType, TransitionType> extends SearchAlgorithm<NodeType, TransitionType> {
+public class MCTSSearchAlgorithm<NodeType, TransitionType> extends SearchAlgorithm<NodeType, TransitionType> {
 
     private final int maxIterations;
     private final double explorationParameter;
@@ -38,8 +38,9 @@ public abstract class MCTSSearchAlgorithm<NodeType, TransitionType> extends Sear
     }
 
     @Override
-    protected Pair<LinkedList<TransitionType>, Float> search(NodeType input, NeighborGenerator<NodeType, TransitionType>
-            neighborGenerator, Evaluator<NodeType> evaluator) {
+    public Pair<LinkedList<TransitionType>, Float> search(NodeType input,
+                                                             NeighborGenerator<NodeType, TransitionType> neighborGenerator,
+                                                             Evaluator<NodeType> evaluator) {
         MCTSNode root = new MCTSNode(input, null, null, neighborGenerator);
         for(int i = 0; i< maxIterations;i++){
             MCTSNode selectedNode =select(root);
