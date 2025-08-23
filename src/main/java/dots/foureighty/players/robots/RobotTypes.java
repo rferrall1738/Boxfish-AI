@@ -7,7 +7,10 @@ public enum RobotTypes {
     ALPHA_BETA( "Alpha Beta Bot"),
     MCTS("Monte Carlo Tree Search Bot"),
     MINIMAX("Mini Max Bot"),
-    TIMED("Timed Bot");
+    TIMED("Timed Bot"),
+    PARALLEL_MCTS("Parallel MCTS Bot"),
+    PARALLEL_MINIMAX("Parallel Mini Max Bot"),
+    MCTS_MAX("MCTS Max Bot");
 
     private final String name;
 

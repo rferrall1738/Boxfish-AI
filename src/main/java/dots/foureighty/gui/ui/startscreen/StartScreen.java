@@ -4,18 +4,9 @@ package dots.foureighty.gui.ui.startscreen;
 import dots.foureighty.game.GameFactory;
 import dots.foureighty.game.boards.StandardBoards;
 import dots.foureighty.gui.GameWatcher;
-import dots.foureighty.players.LocalHumanPlayer;
-import dots.foureighty.players.Player;
-import dots.foureighty.players.robots.RobotTypes;
-import dots.foureighty.players.robots.dumb.GreedyBot;
-import dots.foureighty.players.robots.dumb.RandomBot;
-import dots.foureighty.players.robots.searchbots.minimax.AlphaBetaBot;
-import dots.foureighty.players.robots.searchbots.mcts.MCTSBot;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
-import java.util.HashMap;
 
 public class StartScreen extends JFrame {
 

@@ -1,16 +1,21 @@
 package dots.foureighty.gui.ui.startscreen;
 
 
+import dots.foureighty.lines.Move;
 import dots.foureighty.players.LocalHumanPlayer;
 import dots.foureighty.players.Player;
 import dots.foureighty.players.robots.RobotTypes;
 import dots.foureighty.players.robots.TimeableBots;
+import dots.foureighty.players.robots.algorithms.mcts.MCTSSearchAlgorithm;
 import dots.foureighty.players.robots.dumb.GreedyBot;
 import dots.foureighty.players.robots.dumb.RandomBot;
+import dots.foureighty.players.robots.searchbots.DABState;
 import dots.foureighty.players.robots.searchbots.mcts.MCTSBot;
+import dots.foureighty.players.robots.searchbots.mcts.ParallelMCTSBot;
+import dots.foureighty.players.robots.searchbots.mctsmax.MCTSMaxBot;
 import dots.foureighty.players.robots.searchbots.minimax.AlphaBetaBot;
 import dots.foureighty.players.robots.searchbots.minimax.MinimaxBot;
-import dots.foureighty.players.robots.searchbots.timed.TimedBot;
+import dots.foureighty.players.robots.searchbots.minimax.ParallelMaxBot;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,6 +31,7 @@ public class PlayerSelector extends JPanel {
     private JTextField humanNameInput;
     private JComboBox<TimeableBots> timedBotSelector;
     private JSpinner thinkingTimeSpinner;
+    private JSpinner switchSpinner;
 
 
 
@@ -70,6 +76,11 @@ public class PlayerSelector extends JPanel {
         add(maxIterationsLbl);
         add(iterationsSpinner);
 
+        JLabel switchLbl = new JLabel("Switch Rate:");
+         switchSpinner = new JSpinner(new SpinnerNumberModel(0.5, 0.0, 1.0, .01));
+         add(switchLbl);
+         add(switchSpinner);
+
         //Timed bot
         JLabel timedBotLabel = new JLabel("Bot Type:");
         timedBotSelector = new JComboBox<>(TimeableBots.values());
@@ -89,16 +100,20 @@ public class PlayerSelector extends JPanel {
             humanNameInput.setVisible(type == RobotTypes.HUMAN);
             colorPicker.setVisible(type == RobotTypes.HUMAN);
 
-            depthLbl.setVisible(type == RobotTypes.ALPHA_BETA || type == RobotTypes.MINIMAX);
-            depthSpinner.setVisible(type == RobotTypes.ALPHA_BETA || type == RobotTypes.MINIMAX);
+            depthLbl.setVisible(type == RobotTypes.ALPHA_BETA || type == RobotTypes.MINIMAX || type == RobotTypes.MCTS_MAX|| type == RobotTypes.PARALLEL_MINIMAX);
+            depthSpinner.setVisible(type == RobotTypes.ALPHA_BETA || type == RobotTypes.MINIMAX || type == RobotTypes.MCTS_MAX || type == RobotTypes.PARALLEL_MINIMAX);
 
-            maxIterationsLbl.setVisible(type == RobotTypes.MCTS);
-            iterationsSpinner.setVisible(type == RobotTypes.MCTS);
+            maxIterationsLbl.setVisible(type == RobotTypes.MCTS|| type == RobotTypes.MCTS_MAX|| type == RobotTypes.PARALLEL_MCTS);
+            iterationsSpinner.setVisible(type == RobotTypes.MCTS|| type == RobotTypes.MCTS_MAX|| type == RobotTypes.PARALLEL_MCTS);
 
             timedBotSelector.setVisible(type == RobotTypes.TIMED);
             thinkingTimeSpinner.setVisible(type == RobotTypes.TIMED);
             thinkingTimeLabel.setVisible(type == RobotTypes.TIMED);
             timedBotLabel.setVisible(type == RobotTypes.TIMED);
+
+            switchLbl.setVisible(type == RobotTypes.MCTS_MAX);
+            switchSpinner.setVisible(type == RobotTypes.MCTS_MAX);
+
 
             revalidate();
             repaint();
@@ -121,6 +136,16 @@ public class PlayerSelector extends JPanel {
                 return new RandomBot();
             case MINIMAX:
                 return new MinimaxBot((int) iterationsSpinner.getValue());
+            case PARALLEL_MCTS:
+                return new ParallelMCTSBot((int) iterationsSpinner.getValue());
+            case PARALLEL_MINIMAX:
+                return new ParallelMaxBot((int) depthSpinner.getValue());
+            case MCTS_MAX:
+                int iterations = (int) iterationsSpinner.getValue();
+                int depth = (int) depthSpinner.getValue();
+                double switchRate = (double) switchSpinner.getValue();
+                MCTSSearchAlgorithm<DABState, Move> mcts = new MCTSSearchAlgorithm<DABState, Move>(iterations);
+                return new MCTSMaxBot(mcts, depth, switchRate);
             case TIMED:
                 return ((TimeableBots) timedBotSelector.getSelectedItem()).getBot((Integer) thinkingTimeSpinner.getValue());
             case HUMAN:
