@@ -14,7 +14,7 @@ public interface Player {
 
     String getName();
 
-    Move getMove(GameSnapshot gameState);
+    Move getMove(GameSnapshot gameState) throws InterruptedException;
 
 
 }

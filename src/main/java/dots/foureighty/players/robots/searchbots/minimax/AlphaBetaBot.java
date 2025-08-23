@@ -2,11 +2,11 @@ package dots.foureighty.players.robots.searchbots.minimax;
 
 import dots.foureighty.game.GameSnapshot;
 import dots.foureighty.lines.Move;
+import dots.foureighty.players.Player;
 import dots.foureighty.players.robots.Heuristic;
 import dots.foureighty.players.robots.algorithms.Evaluator;
 import dots.foureighty.players.robots.algorithms.minimax.AlphaBetaSearchAlgorithm;
 import dots.foureighty.players.robots.searchbots.DABState;
-import dots.foureighty.players.robots.searchbots.SearchBot;
 import dots.foureighty.util.ColorUtils;
 import dots.foureighty.util.Pair;
 
@@ -14,7 +14,7 @@ import java.awt.*;
 import java.util.LinkedList;
 
 
-public class AlphaBetaBot extends AlphaBetaSearchAlgorithm<DABState, Move> implements SearchBot {
+public class AlphaBetaBot extends AlphaBetaSearchAlgorithm<DABState, Move> implements Player {
     protected final int depth;
     private Color color = Color.ORANGE;
     private final Heuristic<DABState>[] heuristics;
@@ -54,9 +54,9 @@ public class AlphaBetaBot extends AlphaBetaSearchAlgorithm<DABState, Move> imple
 
 
     @Override
-    public Move getMove(GameSnapshot gameState) {
+    public Move getMove(GameSnapshot gameState) throws InterruptedException {
         DABState initialState = new DABState(gameState.getBoard());
-        Pair<LinkedList<Move>, Float> result = search(initialState, new MinimaxNeighborGenerator(), stateEvaluator, depth, true, -Float.MAX_VALUE, Float.MAX_VALUE);
-        return result.getKey().getFirst();
+            Pair<LinkedList<Move>, Float> result = search(initialState, new MinimaxNeighborGenerator(), stateEvaluator, depth, true, -Float.MAX_VALUE, Float.MAX_VALUE);
+            return result.getKey().getFirst();
     }
 }

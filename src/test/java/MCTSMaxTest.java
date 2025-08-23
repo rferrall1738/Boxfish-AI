@@ -29,7 +29,7 @@ public class MCTSMaxTest {
 
 
     @Test
-    public void singleNodeSearch() {
+    public void singleNodeSearch() throws InterruptedException {
         Pair<LinkedList<TreeSide>, Float> res = MCTS_MAX_SEARCH.search(SINGLE_NODE);
 
         assertTrue(res.getKey().isEmpty());
@@ -37,7 +37,7 @@ public class MCTSMaxTest {
     }
 
     @Test
-    public void singleBranchSearch() {
+    public void singleBranchSearch() throws InterruptedException {
         Pair<LinkedList<TreeSide>, Float> result = MCTS_MAX_SEARCH.search(SINGLE_BRANCH);
 
         assertNotNull(result.getKey());
@@ -46,7 +46,7 @@ public class MCTSMaxTest {
         assertEquals(2.0f, result.getValue(), 1e-2);
     }
     @Test
-    public void treeSearch() {
+    public void treeSearch() throws InterruptedException {
         Pair<LinkedList<TreeSide>, Float> result = MCTS_MAX_SEARCH.search(BIG_TREE);
 
         System.out.println("MCTS Result Value: " + result.getValue());

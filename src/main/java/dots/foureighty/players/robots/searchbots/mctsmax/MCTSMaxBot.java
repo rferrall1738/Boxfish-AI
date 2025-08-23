@@ -60,7 +60,7 @@ public class MCTSMaxBot extends MCTSMaxAlgorithm<DABState, Move> implements Play
     public void setColor(Color color) { this.color = color; }
 
     @Override
-    public Move getMove(GameSnapshot gameState) {
+    public Move getMove(GameSnapshot gameState) throws InterruptedException{
         DABState initialState = new DABState(gameState.getBoard());
         Pair<LinkedList<Move>, Float> result =
                 search(initialState, neighborGenerator, evaluator, -1, /* maximize= */ true);

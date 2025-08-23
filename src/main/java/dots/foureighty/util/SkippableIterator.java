@@ -9,4 +9,5 @@ public abstract class SkippableIterator<T> implements Iterator<T> {
      * @throws NoSuchElementException if not on a branch.
      */
     public abstract void pruneCurrentBranch() throws NoSuchElementException;
+
 }

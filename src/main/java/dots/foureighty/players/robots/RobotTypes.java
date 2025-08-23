@@ -6,6 +6,7 @@ public enum RobotTypes {
     RANDOM( "Random Bot"),
     ALPHA_BETA( "Alpha Beta Bot"),
     MCTS("Monte Carlo Tree Search Bot"),
+    MINIMAX("Mini Max Bot"),
     TIMED("Timed Bot");
 
     private final String name;
@@ -14,6 +15,11 @@ public enum RobotTypes {
         this.name = name;
     }
     public String getName() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
         return name;
     }
 }

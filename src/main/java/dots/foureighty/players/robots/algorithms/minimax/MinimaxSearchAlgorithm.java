@@ -11,11 +11,15 @@ import java.util.LinkedList;
 public class MinimaxSearchAlgorithm<InputType, TransitionType> extends SearchAlgorithm<InputType, TransitionType> {
 
     @Override
-    protected final Pair<LinkedList<TransitionType>, Float> search(InputType input, NeighborGenerator<InputType, TransitionType> neighborGenerator, Evaluator<InputType> evaluator) {
+    protected final Pair<LinkedList<TransitionType>, Float> search(InputType input, NeighborGenerator<InputType, TransitionType> neighborGenerator, Evaluator<InputType> evaluator) throws InterruptedException {
         return search(input, neighborGenerator, evaluator, -1, true);
     }
 
-    protected Pair<LinkedList<TransitionType>, Float> search(InputType input, NeighborGenerator<InputType, TransitionType> neighborGenerator, Evaluator<InputType> evaluator, int depth, boolean maximize) {
+    protected Pair<LinkedList<TransitionType>, Float> search(InputType input, NeighborGenerator<InputType, TransitionType> neighborGenerator, Evaluator<InputType> evaluator, int depth, boolean maximize) throws InterruptedException {
+        if(Thread.interrupted()){
+            throw new InterruptedException("Thread has been interrupted");
+        }
+
         Iterator<Pair<InputType, TransitionType>> neighbors = neighborGenerator.getNeighbors(input);
         if (!neighbors.hasNext() || depth == 0) {
             return new Pair<>(new LinkedList<>(), evaluator.evaluate(input));

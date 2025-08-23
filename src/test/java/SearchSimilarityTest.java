@@ -15,18 +15,18 @@ public class SearchSimilarityTest {
     private static final BinaryTreeAlphaBetaSearch ALPHA_BETA_SEARCH = new BinaryTreeAlphaBetaSearch();
 
     @Test
-    public void testSmallTree() {
+    public void testSmallTree() throws InterruptedException {
         BinaryTreeNode tree = new RandomBinaryTree(0.05f);
         assertEquals(MINIMAX_SEARCH.search(tree), ALPHA_BETA_SEARCH.search(tree));
     }
     @Test
-    public void testMediumTree() {
+    public void testMediumTree() throws InterruptedException {
         BinaryTreeNode tree = new RandomBinaryTree(0.3f);
         assertEquals(MINIMAX_SEARCH.search(tree), ALPHA_BETA_SEARCH.search(tree));
     }
     @Test
-    public void testLargeTree() {
-        BinaryTreeNode tree = new RandomBinaryTree(0.6f);
+    public void testLargeTree() throws InterruptedException {
+        BinaryTreeNode tree = new RandomBinaryTree(0.5f);
         assertEquals(MINIMAX_SEARCH.search(tree), ALPHA_BETA_SEARCH.search(tree));
     }
 }

@@ -55,11 +55,11 @@ public class MCTSMaxAlgorithm<InputType, TransitionType> extends AlphaBetaSearch
                                                              NeighborGenerator<InputType, TransitionType> neighborGenerator,
                                                              Evaluator<InputType> evaluator,
                                                              int depth,
-                                                             boolean maximize) {
+                                                             boolean maximize) throws InterruptedException {
         final int abDepthOnce = depth < 0 ? defaultDepth : depth;
 
         if (usingAlphaBeta) {
-            return super.search(input, neighborGenerator, evaluator, abDepthOnce, maximize);
+                return super.search(input, neighborGenerator, evaluator, abDepthOnce, maximize);
         }
 
         final int neighborCount = countNeighbors(input, neighborGenerator);
@@ -72,7 +72,12 @@ public class MCTSMaxAlgorithm<InputType, TransitionType> extends AlphaBetaSearch
 
         if (switchToAB) {
             usingAlphaBeta = true;
-            return super.search(input, neighborGenerator, evaluator, abDepthOnce, maximize);
+            try {
+                return super.search(input, neighborGenerator, evaluator, abDepthOnce, maximize);
+            } catch (InterruptedException e) {
+                //TODO: Fix this
+                throw new RuntimeException(e);
+            }
         }
 
         return mcts.search(input, neighborGenerator, evaluator);

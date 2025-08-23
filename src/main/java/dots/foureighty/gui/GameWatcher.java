@@ -28,10 +28,7 @@ public class GameWatcher extends JFrame implements GameUpdateListener {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
-                deregister();
-
-                setVisible(false);
-                dispose();
+                System.exit(0);
             }
         });
 

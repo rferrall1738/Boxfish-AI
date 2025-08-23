@@ -20,7 +20,7 @@ public class MinimaxTest {
     private static final BinaryTreeMinimaxSearch MINIMAX_SEARCH = new BinaryTreeMinimaxSearch();
 
     @Test
-    public void singleNodeSearch() {
+    public void singleNodeSearch() throws InterruptedException {
         Pair<LinkedList<TreeSide>, Float> singleNodeResults = MINIMAX_SEARCH.search(SINGLE_NODE);
 
         assertEquals(new Pair<>(new LinkedList(), 1.0f), singleNodeResults);
@@ -29,14 +29,14 @@ public class MinimaxTest {
     }
 
     @Test
-    public void singleBranchSearch() {
+    public void singleBranchSearch() throws InterruptedException {
         Pair<LinkedList<TreeSide>, Float> single = MINIMAX_SEARCH.search(SINGLE_BRANCH);
         assertEquals(2.0f, single.getValue());
         assertArrayEquals(new TreeSide[]{TreeSide.RIGHT}, single.getKey().toArray());
     }
 
     @Test
-    public void treeSearch() {
+    public void treeSearch() throws InterruptedException {
         Pair<LinkedList<TreeSide>, Float> single = MINIMAX_SEARCH.search(BIG_TREE);
 
         assertEquals(3.0f, single.getValue());

@@ -19,7 +19,7 @@ public class ParallelMaxBot extends MinimaxBot{
     }
 
     @Override
-    public Move getMove(GameSnapshot gameState){
+    public Move getMove(GameSnapshot gameState) throws InterruptedException{
         if (getDepth() <= 2) {
             return super.getMove(gameState);
         }

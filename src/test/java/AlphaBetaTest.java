@@ -22,19 +22,19 @@ public class AlphaBetaTest {
 
 
     @Test
-    public void singleNodeSearch() {
+    public void singleNodeSearch() throws InterruptedException {
         assertEquals(new Pair<>(new LinkedList(), 1.0f), ALPHA_BETA_SEARCH.search(SINGLE_NODE));
     }
 
     @Test
-    public void singleBranchSearch() {
+    public void singleBranchSearch() throws InterruptedException {
         Pair<LinkedList<TreeSide>, Float> single = ALPHA_BETA_SEARCH.search(SINGLE_BRANCH);
         assertEquals(2.0f, single.getValue());
         assertArrayEquals(new TreeSide[]{TreeSide.RIGHT}, single.getKey().toArray());
     }
 
     @Test
-    public void treeSearch() {
+    public void treeSearch() throws InterruptedException {
         Pair<LinkedList<TreeSide>, Float> single = ALPHA_BETA_SEARCH.search(BIG_TREE);
         assertEquals(3.0f, single.getValue());
 

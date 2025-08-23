@@ -20,12 +20,6 @@ public class BinaryTreeMCTSMaxSearch extends MCTSMaxAlgorithm<BinaryTreeNode, Tr
             new SkippableNeighborGenerator<BinaryTreeNode, TreeSide>() {
                 @Override
                 public SkippableIterator<Pair<BinaryTreeNode, TreeSide>> getNeighbors(BinaryTreeNode input) {
-                    LinkedList<Pair<BinaryTreeNode, TreeSide>> neighbors = new LinkedList<>();
-                    if (input instanceof BinaryTreeBranch) {
-                        BinaryTreeBranch branch = (BinaryTreeBranch) input;
-                        neighbors.add(new Pair<>(branch.getLeft(), TreeSide.LEFT));
-                        neighbors.add(new Pair<>(branch.getRight(), TreeSide.RIGHT));
-                    }
                     return new SkippableTreeIterator(input);
                 }
             };
@@ -46,7 +40,7 @@ public class BinaryTreeMCTSMaxSearch extends MCTSMaxAlgorithm<BinaryTreeNode, Tr
     }
 
 
-    public Pair<LinkedList<TreeSide>, Float> search(BinaryTreeNode input) {
+    public Pair<LinkedList<TreeSide>, Float> search(BinaryTreeNode input) throws InterruptedException {
         reset();
         return super.search(input, neighborGenerator, evaluator, -1, true);
     }

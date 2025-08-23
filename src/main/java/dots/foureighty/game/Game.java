@@ -72,7 +72,12 @@ public class Game {
             notifyUpdateListeners(GameUpdateType.GAME_START);
             while (isActive()) {
                 Player currentPlayer = isPlayer1Turn() ? player1 : player2;
-                Move playedMove = currentPlayer.getMove(this.generateSnapshot());
+                Move playedMove;
+                try {
+                     playedMove = currentPlayer.getMove(this.generateSnapshot());
+                } catch (InterruptedException e) {
+                    throw new RuntimeException("Received interrupt when searching for next move");
+                }
                 playMove(playedMove);
                 moves.add(new PlayedMove(playedMove.getLines(), isPlayer1Turn()));
 

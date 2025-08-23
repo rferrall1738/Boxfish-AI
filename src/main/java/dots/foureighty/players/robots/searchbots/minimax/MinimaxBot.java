@@ -2,11 +2,11 @@ package dots.foureighty.players.robots.searchbots.minimax;
 
 import dots.foureighty.game.GameSnapshot;
 import dots.foureighty.lines.Move;
+import dots.foureighty.players.Player;
 import dots.foureighty.players.robots.Heuristic;
 import dots.foureighty.players.robots.algorithms.Evaluator;
 import dots.foureighty.players.robots.algorithms.minimax.MinimaxSearchAlgorithm;
 import dots.foureighty.players.robots.searchbots.DABState;
-import dots.foureighty.players.robots.searchbots.SearchBot;
 import dots.foureighty.util.ColorUtils;
 import dots.foureighty.util.Pair;
 
@@ -14,7 +14,7 @@ import java.awt.*;
 import java.util.LinkedList;
 
 
-public class MinimaxBot extends MinimaxSearchAlgorithm<DABState, Move> implements SearchBot {
+public class MinimaxBot extends MinimaxSearchAlgorithm<DABState, Move> implements Player {
     protected final int depth;
     private Color color = Color.ORANGE;
     private final Heuristic<DABState>[] heuristics;
@@ -58,10 +58,9 @@ public class MinimaxBot extends MinimaxSearchAlgorithm<DABState, Move> implement
 
 
     @Override
-    public Move getMove(GameSnapshot gameState) {
+    public Move getMove(GameSnapshot gameState) throws InterruptedException {
         DABState initialState = new DABState(gameState.getBoard());
         Pair<LinkedList<Move>, Float> result = search(initialState, new MinimaxNeighborGenerator(), stateEvaluator, depth, true);
-
         return result.getKey().getFirst();
     }
 

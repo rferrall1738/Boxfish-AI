@@ -32,7 +32,7 @@ public class BinaryTreeAlphaBetaSearch extends AlphaBetaSearchAlgorithm<BinaryTr
         }
     };
 
-    public Pair<LinkedList<TreeSide>, Float> search(BinaryTreeNode input) {
+    public Pair<LinkedList<TreeSide>, Float> search(BinaryTreeNode input) throws InterruptedException {
         return super.search(input, neighborGenerator, evaluator, -1, true);
     }
 }

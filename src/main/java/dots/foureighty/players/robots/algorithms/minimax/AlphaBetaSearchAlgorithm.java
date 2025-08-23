@@ -14,13 +14,17 @@ public abstract class AlphaBetaSearchAlgorithm<InputType, TransitionType> extend
 
 
     @Override
-    protected Pair<LinkedList<TransitionType>, Float> search(InputType input, NeighborGenerator<InputType, TransitionType> neighborGenerator, Evaluator<InputType> evaluator, int depth, boolean maximize) {
+    protected Pair<LinkedList<TransitionType>, Float> search(InputType input, NeighborGenerator<InputType, TransitionType> neighborGenerator, Evaluator<InputType> evaluator, int depth, boolean maximize) throws InterruptedException {
         return search(input, (SkippableNeighborGenerator) neighborGenerator, evaluator, depth, maximize, -Float.MAX_VALUE, Float.MAX_VALUE);
     }
 
-    protected final Pair<LinkedList<TransitionType>, Float> search(InputType input, SkippableNeighborGenerator neighborGenerator, Evaluator evaluator, int depth, boolean maximize, float alpha, float beta) {
-        SkippableIterator<Pair<InputType, TransitionType>> neighbors = neighborGenerator.getNeighbors(input);
+    protected final Pair<LinkedList<TransitionType>, Float> search(InputType input, SkippableNeighborGenerator neighborGenerator, Evaluator evaluator, int depth, boolean maximize, float alpha, float beta) throws InterruptedException {
 
+        if(Thread.interrupted()){
+            throw new InterruptedException("Thread has been interrupted");
+        }
+
+        SkippableIterator<Pair<InputType, TransitionType>> neighbors = neighborGenerator.getNeighbors(input);
         if (!neighbors.hasNext() || depth == 0) {
             return new Pair<>(new LinkedList<>(), evaluator.evaluate(input));
         }

@@ -16,5 +16,5 @@ public abstract class SearchAlgorithm<NodeType, TransitionType> {
      */
     protected abstract Pair<LinkedList<TransitionType>, Float> search(NodeType input,
                                                                       NeighborGenerator<NodeType, TransitionType> neighborGenerator,
-                                                                      Evaluator<NodeType> evaluator);
+                                                                      Evaluator<NodeType> evaluator) throws InterruptedException;
 }

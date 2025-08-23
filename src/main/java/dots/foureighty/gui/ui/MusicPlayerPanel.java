@@ -59,7 +59,6 @@ public class MusicPlayerPanel extends JPanel {
                 false
         );
         AudioInputStream din = AudioSystem.getAudioInputStream(dst, in);
-
         Clip clip = AudioSystem.getClip();
         clip.open(din);
         in.close();
