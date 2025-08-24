@@ -18,6 +18,7 @@ public class GameWatcher extends JFrame implements GameUpdateListener {
     private final JLabel player2Name = new JLabel();
     private final JLabel player1Score = new JLabel();
     private final JLabel player2Score = new JLabel();
+    private final JLabel winnerLabel = new JLabel(" ", SwingConstants.CENTER);
 
     private GamePanel gamePanel;
     private boolean registered = true;
@@ -52,7 +53,11 @@ public class GameWatcher extends JFrame implements GameUpdateListener {
         player2Panel.add(player2Name, 0, 0);
         player2Panel.add(player2Score, 1, 0);
 
+        winnerLabel.setFont(winnerLabel.getFont().deriveFont(Font.BOLD, 14f));
 
+        JPanel topContainer = new JPanel(new BorderLayout());
+        topContainer.add(playersPanel, BorderLayout.NORTH);
+        topContainer.add(winnerLabel, BorderLayout.SOUTH);
     }
 
     private void updatePlayerPanels() {
@@ -89,7 +94,11 @@ public class GameWatcher extends JFrame implements GameUpdateListener {
 
         updatePlayerPanels();
         getContentPane().add(gamePanel, BorderLayout.CENTER);
-        getContentPane().add(playersPanel, BorderLayout.PAGE_START);
+
+        JPanel topContainer = new JPanel(new BorderLayout());
+        topContainer.add(playersPanel, BorderLayout.NORTH);
+        topContainer.add(winnerLabel, BorderLayout.SOUTH);
+        getContentPane().add(topContainer, BorderLayout.PAGE_START);
 
         // adds music player to bottom of screen
         try {
@@ -111,6 +120,22 @@ public class GameWatcher extends JFrame implements GameUpdateListener {
 
     }
 
+    public void showWinner() {
+        int p1 = game.getPlayer1Boxes().length;
+        int p2 = game.getPlayer2Boxes().length;
+        String text;
+
+        if (p1 > p2) {
+            text = game.getPlayer1Name() + " wins " + p1 + "–" + p2 + "!";
+        } else if (game.getPlayer1Boxes().length < game.getPlayer2Boxes().length) {
+            text = game.getPlayer2Name() + " wins " + p2 + "–" + p1 + "!";
+        } else {
+            text = "It's a tie! " + p1 + "–" + p2;
+        }
+
+        winnerLabel.setText(text);
+    }
+
     @Override
     public boolean unregister() {
         return !registered;
@@ -127,6 +152,10 @@ public class GameWatcher extends JFrame implements GameUpdateListener {
 
         if (gameUpdateType == GameUpdateType.MOVE_PLAYED) {
             updateGame(gameSnapshot);
+        }
+
+        if (gameUpdateType == GameUpdateType.GAME_END) {
+            showWinner();
         }
     }
 }
