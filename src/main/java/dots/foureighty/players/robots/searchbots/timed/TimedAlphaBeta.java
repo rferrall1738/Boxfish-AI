@@ -60,7 +60,6 @@ public class TimedAlphaBeta implements TimedBot {
                     try {
                         movePackage.setMove(bot.getMove(gameState));
                     } catch (InterruptedException e) {
-                        System.out.println("Interrupted");
                     }
                    depth++;
                 }
