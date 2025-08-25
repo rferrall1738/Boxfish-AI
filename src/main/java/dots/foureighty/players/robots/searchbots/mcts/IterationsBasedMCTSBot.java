@@ -4,7 +4,7 @@ import dots.foureighty.game.GameSnapshot;
 import dots.foureighty.lines.Move;
 import dots.foureighty.players.Player;
 import dots.foureighty.players.robots.algorithms.Evaluator;
-import dots.foureighty.players.robots.algorithms.mcts.MCTSSearchAlgorithm;
+import dots.foureighty.players.robots.algorithms.mcts.IterationsBasedMCTSSearchAlgorithm;
 import dots.foureighty.players.robots.searchbots.DABState;
 import dots.foureighty.players.robots.searchbots.minimax.MinimaxNeighborGenerator;
 import dots.foureighty.util.ColorUtils;
@@ -13,15 +13,15 @@ import dots.foureighty.util.Pair;
 import java.awt.*;
 import java.util.LinkedList;
 
-public class MCTSBot  extends MCTSSearchAlgorithm<DABState,Move> implements Player {
+public class IterationsBasedMCTSBot extends IterationsBasedMCTSSearchAlgorithm<DABState,Move> implements Player {
     private Color color = Color.PINK;
     private final int iterations;
 
-    public MCTSBot(int maxIterations) throws IllegalArgumentException {
+    public IterationsBasedMCTSBot(int maxIterations) throws IllegalArgumentException {
         this(maxIterations, Math.sqrt(2)); //TODO: Test this and pick a better value
     }
 
-    public MCTSBot(int maxIterations, double explorationParameter) throws IllegalArgumentException {
+    public IterationsBasedMCTSBot(int maxIterations, double explorationParameter) throws IllegalArgumentException {
         super(maxIterations, explorationParameter);
         iterations = maxIterations;
     }

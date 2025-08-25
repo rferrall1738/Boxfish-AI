@@ -3,7 +3,7 @@ import algorithms.binarytree.BinaryTreeNode;
 import algorithms.binarytree.BinaryTreeValue;
 import algorithms.binarytree.TreeSide;
 import algorithms.minimax.BinaryTreeMCTSMaxSearch;
-import dots.foureighty.players.robots.algorithms.mcts.MCTSSearchAlgorithm;
+import dots.foureighty.players.robots.algorithms.mcts.IterationsBasedMCTSSearchAlgorithm;
 import dots.foureighty.util.Pair;
 import org.junit.jupiter.api.Test;
 
@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 public class MCTSMaxTest {
+
     private static final BinaryTreeNode SINGLE_NODE = new BinaryTreeValue(1);
     private static final BinaryTreeNode SINGLE_BRANCH = new BinaryTreeBranch(1, 2);
     private static final BinaryTreeNode BIG_TREE =
@@ -24,7 +25,7 @@ public class MCTSMaxTest {
 
 
 
-    private static final BinaryTreeMCTSMaxSearch MCTS_MAX_SEARCH = new BinaryTreeMCTSMaxSearch (new MCTSSearchAlgorithm<>(1000), 4, 0.5);
+    private static final BinaryTreeMCTSMaxSearch MCTS_MAX_SEARCH = new BinaryTreeMCTSMaxSearch (new IterationsBasedMCTSSearchAlgorithm<>(1000), 4, 0.5);
 
 
 
@@ -61,6 +62,8 @@ public class MCTSMaxTest {
 
         assertTrue(result.getValue() >= -1.0f && result.getValue() <= 9.0f);
     }
+
+
 
 }
 

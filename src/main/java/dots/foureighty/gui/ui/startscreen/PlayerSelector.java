@@ -6,11 +6,11 @@ import dots.foureighty.players.LocalHumanPlayer;
 import dots.foureighty.players.Player;
 import dots.foureighty.players.robots.RobotTypes;
 import dots.foureighty.players.robots.TimeableBots;
-import dots.foureighty.players.robots.algorithms.mcts.MCTSSearchAlgorithm;
+import dots.foureighty.players.robots.algorithms.mcts.IterationsBasedMCTSSearchAlgorithm;
 import dots.foureighty.players.robots.dumb.GreedyBot;
 import dots.foureighty.players.robots.dumb.RandomBot;
 import dots.foureighty.players.robots.searchbots.DABState;
-import dots.foureighty.players.robots.searchbots.mcts.MCTSBot;
+import dots.foureighty.players.robots.searchbots.mcts.IterationsBasedMCTSBot;
 import dots.foureighty.players.robots.searchbots.mcts.ParallelMCTSBot;
 import dots.foureighty.players.robots.searchbots.mctsmax.MCTSMaxBot;
 import dots.foureighty.players.robots.searchbots.minimax.AlphaBetaBot;
@@ -127,7 +127,7 @@ public class PlayerSelector extends JPanel {
     public Player makePlayer() {
         switch ((RobotTypes) playerTypeSelector.getSelectedItem()) {
             case MCTS:
-                return new MCTSBot((int) iterationsSpinner.getValue());
+                return new IterationsBasedMCTSBot((int) iterationsSpinner.getValue());
             case ALPHA_BETA:
                 return new AlphaBetaBot((int) depthSpinner.getValue());
             case GREEDY:
@@ -144,7 +144,7 @@ public class PlayerSelector extends JPanel {
                 int iterations = (int) iterationsSpinner.getValue();
                 int depth = (int) depthSpinner.getValue();
                 double switchRate = (double) switchSpinner.getValue();
-                MCTSSearchAlgorithm<DABState, Move> mcts = new MCTSSearchAlgorithm<DABState, Move>(iterations);
+                IterationsBasedMCTSSearchAlgorithm<DABState, Move> mcts = new IterationsBasedMCTSSearchAlgorithm<>(iterations);
                 return new MCTSMaxBot(mcts, depth, switchRate);
             case TIMED:
                 return ((TimeableBots) timedBotSelector.getSelectedItem()).getBot((Integer) thinkingTimeSpinner.getValue());

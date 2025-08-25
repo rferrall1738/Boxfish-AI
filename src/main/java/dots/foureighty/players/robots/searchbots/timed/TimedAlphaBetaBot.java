@@ -11,7 +11,7 @@ import dots.foureighty.players.robots.searchbots.minimax.AlphaBetaBot;
 import java.awt.*;
 import java.util.HashMap;
 
-public class TimedAlphaBeta implements TimedBot {
+public class TimedAlphaBetaBot implements TimedBot {
 
     private final HashMap<Integer,AlphaBetaBot> depthBasedBots = new HashMap<>();
     private final long thinkingTime;
@@ -23,7 +23,7 @@ public class TimedAlphaBeta implements TimedBot {
      * @param thinkingTimeMS How long the bot can think (in ms)
      * @param heuristics The heuristics to use
      */
-    public TimedAlphaBeta(long thinkingTimeMS, Heuristic<DABState>... heuristics) {
+    public TimedAlphaBetaBot(long thinkingTimeMS, Heuristic<DABState>... heuristics) {
         this.thinkingTime = thinkingTimeMS;
         this.heuristics = heuristics;
     }

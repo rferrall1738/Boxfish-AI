@@ -6,7 +6,7 @@ import dots.foureighty.players.Player;
 import dots.foureighty.players.robots.Heuristic;
 import dots.foureighty.players.robots.SkippableNeighborGenerator;
 import dots.foureighty.players.robots.algorithms.Evaluator;
-import dots.foureighty.players.robots.algorithms.mcts.MCTSSearchAlgorithm;
+import dots.foureighty.players.robots.algorithms.mcts.IterationsBasedMCTSSearchAlgorithm;
 import dots.foureighty.players.robots.algorithms.mctsmax.MCTSMaxAlgorithm;
 import dots.foureighty.players.robots.searchbots.DABState;
 import dots.foureighty.players.robots.searchbots.minimax.MinimaxNeighborGenerator;
@@ -26,7 +26,7 @@ public class MCTSMaxBot extends MCTSMaxAlgorithm<DABState, Move> implements Play
 
     private Color color = Color.BLACK;
 
-    public MCTSMaxBot(MCTSSearchAlgorithm<DABState, Move> mcts,
+    public MCTSMaxBot(IterationsBasedMCTSSearchAlgorithm<DABState, Move> mcts,
                       int abDepth,
                       double switchRate,
                       Heuristic<DABState>... heuristics) {

@@ -1,11 +1,13 @@
 package dots.foureighty.players.robots;
 
 import dots.foureighty.players.Player;
-import dots.foureighty.players.robots.searchbots.timed.TimedAlphaBeta;
+import dots.foureighty.players.robots.searchbots.timed.TimedAlphaBetaBot;
 import dots.foureighty.players.robots.searchbots.timed.TimedBot;
+import dots.foureighty.players.robots.searchbots.timed.TimedMCTSBot;
 
 public enum TimeableBots {
-    ALPHA_BETA(TimedAlphaBeta::new, RobotTypes.ALPHA_BETA);
+    ALPHA_BETA(TimedAlphaBetaBot::new, RobotTypes.ALPHA_BETA),
+    MCTS(TimedMCTSBot::new, RobotTypes.MCTS);
 
     private final ThinkingSupplier botSupplier;
     private final RobotTypes type;

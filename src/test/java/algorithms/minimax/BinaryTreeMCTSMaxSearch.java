@@ -4,9 +4,8 @@ import dots.foureighty.players.robots.SkippableNeighborGenerator;
 import dots.foureighty.players.robots.algorithms.Evaluator;
 import algorithms.binarytree.BinaryTreeNode;
 import algorithms.binarytree.BinaryTreeValue;
-import algorithms.binarytree.BinaryTreeBranch;
 import algorithms.binarytree.TreeSide;
-import dots.foureighty.players.robots.algorithms.mcts.MCTSSearchAlgorithm;
+import dots.foureighty.players.robots.algorithms.mcts.IterationsBasedMCTSSearchAlgorithm;
 import dots.foureighty.players.robots.algorithms.mctsmax.MCTSMaxAlgorithm;
 import dots.foureighty.util.Pair;
 import dots.foureighty.util.SkippableIterator;
@@ -35,7 +34,7 @@ public class BinaryTreeMCTSMaxSearch extends MCTSMaxAlgorithm<BinaryTreeNode, Tr
         }
     };
 
-    public BinaryTreeMCTSMaxSearch(MCTSSearchAlgorithm<BinaryTreeNode, TreeSide> mcts, int abDepth, double switchRate) {
+    public BinaryTreeMCTSMaxSearch(IterationsBasedMCTSSearchAlgorithm<BinaryTreeNode, TreeSide> mcts, int abDepth, double switchRate) {
         super(mcts, abDepth, switchRate);
     }
 

@@ -2,27 +2,29 @@ package dots.foureighty.players.robots.algorithms.mcts;
 import dots.foureighty.players.robots.algorithms.Evaluator;
 import dots.foureighty.players.robots.algorithms.NeighborGenerator;
 import dots.foureighty.players.robots.algorithms.SearchAlgorithm;
+import dots.foureighty.players.robots.algorithms.mcts.conditional.MCTSConditional;
 import dots.foureighty.util.Pair;
 
 import java.util.*;
+import java.util.function.Supplier;
 
-public class MCTSSearchAlgorithm<NodeType, TransitionType> extends SearchAlgorithm<NodeType, TransitionType> {
+public abstract class MCTSSearchAlgorithmBase<NodeType, TransitionType> extends SearchAlgorithm<NodeType, TransitionType> {
 
-    private final int maxIterations;
     private final double explorationParameter;
     private final static Random RANDOM = new Random();
     private final static int MAX_SIMULATION_DEPTH = 100; //MAX size of tree
 
+    private Supplier<MCTSConditional> mctsConditionalSupplier;
+
     /***
      * Monte Carlo Tree Search
-     * @param maxIterations number of iterations to run MCTS
      * @param explorationParameter Exploration coefficient. Must be >= 0.
      *                             Higher values prioritize exploration of new nodes.
      * @throws IllegalArgumentException explorationParameter is < 0
      */
-    public MCTSSearchAlgorithm(int maxIterations, double explorationParameter) throws IllegalArgumentException{
-        this.maxIterations = maxIterations;
+    public MCTSSearchAlgorithmBase(double explorationParameter, Supplier<MCTSConditional> conditionalSupplier) throws IllegalArgumentException{
         this.explorationParameter = explorationParameter;
+        this.mctsConditionalSupplier = conditionalSupplier;
         if (explorationParameter < 0) {
             throw new IllegalArgumentException("explorationParameter must be >= 0");
         }
@@ -31,18 +33,17 @@ public class MCTSSearchAlgorithm<NodeType, TransitionType> extends SearchAlgorit
     /***
      * Monte Carlo Tree Search
      * exploration constant in sqrt(2)
-     * @param maxIterations number of MCTS iterations
      */
-    public MCTSSearchAlgorithm(int maxIterations) {
-        this(maxIterations, Math.sqrt(2.0));
+    public MCTSSearchAlgorithmBase(Supplier<MCTSConditional> mctsConditional) throws IllegalArgumentException {
+        this(Math.sqrt(2.0), mctsConditional);
     }
 
-    @Override
     public Pair<LinkedList<TransitionType>, Float> search(NodeType input,
-                                                             NeighborGenerator<NodeType, TransitionType> neighborGenerator,
-                                                             Evaluator<NodeType> evaluator) {
+                                                          NeighborGenerator<NodeType, TransitionType> neighborGenerator,
+                                                          Evaluator<NodeType> evaluator) {
+        MCTSConditional mctsConditional = mctsConditionalSupplier.get();
         MCTSNode root = new MCTSNode(input, null, null, neighborGenerator);
-        for(int i = 0; i< maxIterations;i++){
+        while(mctsConditional.runAgain()) {
             MCTSNode selectedNode =select(root);
             MCTSNode expandedNode = expand(selectedNode, neighborGenerator);
             if(expandedNode != null){
@@ -60,7 +61,7 @@ public class MCTSSearchAlgorithm<NodeType, TransitionType> extends SearchAlgorit
             return new Pair<>(new LinkedList<>(), evaluator.evaluate(input));
         }
         LinkedList<TransitionType> moveSequence = new LinkedList<>();
-        moveSequence.add(bestChild.moveFromParent);
+        moveSequence.add(bestChild.getMoveFromParent());
 
         return new Pair<>(moveSequence, (float) bestChild.getAverageReward());
     }
@@ -70,7 +71,7 @@ public class MCTSSearchAlgorithm<NodeType, TransitionType> extends SearchAlgorit
      * @param node Tree node to search
      * @return MCTS Leaf
      */
-    private MCTSNode select(MCTSNode node) {
+    protected MCTSNode select(MCTSNode node) {
         while(!node.isTerminal() && node.isFullyExpanded()){
             node = node.getBestUCB1Child();
             if(node == null){
@@ -86,7 +87,7 @@ public class MCTSSearchAlgorithm<NodeType, TransitionType> extends SearchAlgorit
      * @param neighborGenerator Neighbor Generator for NodeType
      * @return Generated node
      */
-    private MCTSNode expand(MCTSNode node, NeighborGenerator<NodeType, TransitionType> neighborGenerator){
+    protected MCTSNode expand(MCTSNode node, NeighborGenerator<NodeType, TransitionType> neighborGenerator){
         if(node.isTerminal() || !node.hasUntried()){
             return null;
         }
@@ -105,7 +106,7 @@ public class MCTSSearchAlgorithm<NodeType, TransitionType> extends SearchAlgorit
      * @param evaluator Function that evaluates end states
      * @return computer best value.
      */
-    private double simulate(MCTSNode node, NeighborGenerator<NodeType, TransitionType> neighborGenerator,
+    protected double simulate(MCTSNode node, NeighborGenerator<NodeType, TransitionType> neighborGenerator,
                             Evaluator<NodeType> evaluator) {
         NodeType currentState = node.getState();
         int simulationDepth = 0;
@@ -130,7 +131,7 @@ public class MCTSSearchAlgorithm<NodeType, TransitionType> extends SearchAlgorit
      * @param node terminal node
      * @param reward reward at terminal node
      */
-    private void backpropagate(MCTSNode node, double reward){
+    protected void backpropagate(MCTSNode node, double reward){
         if (node == null) {
             return;
         }
@@ -142,7 +143,7 @@ public class MCTSSearchAlgorithm<NodeType, TransitionType> extends SearchAlgorit
     /***
      * Helper class for storing data of MCTS node states
      */
-    private class MCTSNode {
+    protected class MCTSNode {
         private final NodeType state;
         private final TransitionType moveFromParent;
         private final MCTSNode parent;
@@ -161,6 +162,10 @@ public class MCTSSearchAlgorithm<NodeType, TransitionType> extends SearchAlgorit
             this.visitCount = 0;
             this.totalReward = 0.0;
             this.untriedMoves = generateUntriedMoves(state, neighborGenerator);
+        }
+
+        public TransitionType getMoveFromParent() {
+            return moveFromParent;
         }
 
         private ArrayList<Pair<NodeType, TransitionType>> generateUntriedMoves(NodeType state, NeighborGenerator<NodeType,
@@ -291,4 +296,5 @@ public class MCTSSearchAlgorithm<NodeType, TransitionType> extends SearchAlgorit
             return mostVisited;
         }
     }
+
 }

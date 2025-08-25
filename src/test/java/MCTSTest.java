@@ -2,7 +2,7 @@ import algorithms.binarytree.BinaryTreeBranch;
 import algorithms.binarytree.BinaryTreeNode;
 import algorithms.binarytree.BinaryTreeValue;
 import algorithms.binarytree.TreeSide;
-import algorithms.minimax.BinaryTreeMCTSSearch;
+import algorithms.minimax.BinaryTreeIterationsBasedMCTSSearch;
 import dots.foureighty.util.Pair;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +19,7 @@ public class MCTSTest {
             new BinaryTreeBranch(9, -1)
     );
 
-    private static final BinaryTreeMCTSSearch MCTS_SEARCH = new BinaryTreeMCTSSearch(1000);
+    private static final BinaryTreeIterationsBasedMCTSSearch MCTS_SEARCH = new BinaryTreeIterationsBasedMCTSSearch(1000);
 
     @Test
     public void singleNodeSearch() {

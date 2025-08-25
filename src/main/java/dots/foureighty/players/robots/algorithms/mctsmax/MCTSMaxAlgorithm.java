@@ -2,7 +2,7 @@ package dots.foureighty.players.robots.algorithms.mctsmax;
 
 import dots.foureighty.players.robots.algorithms.Evaluator;
 import dots.foureighty.players.robots.algorithms.NeighborGenerator;
-import dots.foureighty.players.robots.algorithms.mcts.MCTSSearchAlgorithm;
+import dots.foureighty.players.robots.algorithms.mcts.IterationsBasedMCTSSearchAlgorithm;
 import dots.foureighty.players.robots.algorithms.minimax.AlphaBetaSearchAlgorithm;
 import dots.foureighty.util.Pair;
 
@@ -12,7 +12,7 @@ import java.util.Objects;
 
 public class MCTSMaxAlgorithm<InputType, TransitionType> extends AlphaBetaSearchAlgorithm<InputType, TransitionType> {
 
-    private final MCTSSearchAlgorithm<InputType, TransitionType> mcts;
+    private final IterationsBasedMCTSSearchAlgorithm<InputType, TransitionType> mcts;
     private final int defaultDepth;
     private final double switchRate;
     private Integer initialBranchingFactor = null;
@@ -29,7 +29,7 @@ public class MCTSMaxAlgorithm<InputType, TransitionType> extends AlphaBetaSearch
      * @throws NullPointerException If the specified MCTS instance is null.
      * @throws IllegalArgumentException If the provided switchRate is not within the range [0.0, 1.0].
      */
-    public MCTSMaxAlgorithm(MCTSSearchAlgorithm<InputType, TransitionType> mcts, int abDepth, double switchRate) {
+    public MCTSMaxAlgorithm(IterationsBasedMCTSSearchAlgorithm<InputType, TransitionType> mcts, int abDepth, double switchRate) {
         this.mcts = Objects.requireNonNull(mcts, "mcts must not be null");
 
         if (switchRate <0.0|| switchRate >1.0) {

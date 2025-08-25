@@ -5,7 +5,7 @@ import algorithms.binarytree.BinaryTreeNode;
 import algorithms.binarytree.BinaryTreeValue;
 import algorithms.binarytree.TreeSide;
 import dots.foureighty.players.robots.algorithms.Evaluator;
-import dots.foureighty.players.robots.algorithms.mcts.MCTSSearchAlgorithm;
+import dots.foureighty.players.robots.algorithms.mcts.IterationsBasedMCTSSearchAlgorithm;
 import dots.foureighty.players.robots.algorithms.NeighborGenerator;
 import dots.foureighty.util.Pair;
 
@@ -13,7 +13,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 
-public class BinaryTreeMCTSSearch extends MCTSSearchAlgorithm<BinaryTreeNode, TreeSide> {
+public class BinaryTreeIterationsBasedMCTSSearch extends IterationsBasedMCTSSearchAlgorithm<BinaryTreeNode, TreeSide> {
 
     private final NeighborGenerator<BinaryTreeNode, TreeSide> neighborGenerator =
             new NeighborGenerator<BinaryTreeNode, TreeSide>() {
@@ -40,7 +40,7 @@ public class BinaryTreeMCTSSearch extends MCTSSearchAlgorithm<BinaryTreeNode, Tr
         }
     };
 
-    public BinaryTreeMCTSSearch(int iterations) {
+    public BinaryTreeIterationsBasedMCTSSearch(int iterations) {
         super(iterations);
     }
 
