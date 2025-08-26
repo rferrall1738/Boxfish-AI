@@ -1,4 +1,4 @@
-# This workflow checksout the repo and runs maven tests.
+# This work flow checksout the repo and runs maven tests.
 
 name: Run Maven Tests
 
@@ -9,7 +9,7 @@ on:
     branches: [ "master" ]
 
 jobs:
-  build:
+  test:
 
     runs-on: ubuntu-latest
 
