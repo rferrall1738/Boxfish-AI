@@ -7,9 +7,14 @@ import dots.foureighty.listeners.GameUpdateListener;
 import dots.foureighty.players.LocalHumanPlayer;
 import dots.foureighty.players.Player;
 import dots.foureighty.util.ColorUtils;
+import dots.foureighty.Khaled.*;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.net.URL;
+import java.util.EnumMap;
+import java.util.Map;
+
 
 public class GameFactory {
     private int xSize = 4;
@@ -179,6 +184,23 @@ public class GameFactory {
             gameBoard = boardGenerator.generateBoard(getXSize(), getYSize());
         }
         Game game = new Game(gameBoard, player1, player2);
+        try {
+            Map<Sfx, URL> sfxMap = new EnumMap<>(Sfx.class);
+            sfxMap.put(Sfx.ANOTHER_ONE,     getClass().getResource("/dots/foureighty/music/AnotherOne.wav"));
+            sfxMap.put(Sfx.PLAYED_YOURSELF, getClass().getResource("/dots/foureighty/music/PlayedYourself.wav"));
+            sfxMap.put(Sfx.YOU_SMART,       getClass().getResource("/dots/foureighty/music/YouSmart.wav"));
+            sfxMap.put(Sfx.DUBS,            getClass().getResource("/dots/foureighty/music/Dub.wav"));
+
+            SfxPlayer sfx = new SfxPlayer(sfxMap);
+            sfx.setVolume(2.0);
+
+            boolean isP1Human = player1 instanceof dots.foureighty.players.LocalHumanPlayer;
+            boolean isP2Human = player2 instanceof dots.foureighty.players.LocalHumanPlayer;
+
+            game.registerGameUpdateListener(new GameSfxListener(sfx, isP1Human, isP2Human));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         if (player1 instanceof GameUpdateListener) {
             updateListeners.add((GameUpdateListener) player1);
